@@ -336,9 +336,71 @@ class Scanner {
         case EOFCH:
             return new TokenInfo(EOF, line);
         case '0':
-            // Handle only simple decimal integers for now.
             nextCh();
-            return new TokenInfo(INT_LITERAL, "0", line);
+        	
+        	if (ch == 'x' || ch == 'X') {
+        		nextCh();
+        		
+        		buffer = new StringBuffer();
+        		while(isHexDigit(ch) || ch == '_') {
+        			if (ch == '_') {
+                		if (isHexDigit(prech) || prech == '_') {
+                			nextCh();
+                			if (!isHexDigit(ch)) {
+                				reportScannerError("Underscores have to be within digits.");
+                			}
+                		} else {
+            				nextCh();
+            				reportScannerError("Underscores have to be within digits.");
+            			}
+                	} else {
+                		buffer.append(ch);
+                		nextCh();
+                	}
+        		}
+        		
+        		return new TokenInfo(INT_LITERAL, String.valueOf(Integer.parseInt(buffer.toString(), 16)), line);
+        	} else if (ch == 'b' || ch == 'B') {
+        		nextCh();
+        		
+        		buffer = new StringBuffer();
+        		while(isBinaryDigit(ch) || ch == '_') {
+        			if (ch == '_') {
+                		if (isBinaryDigit(prech) || prech == '_') {
+                			nextCh();
+                			if (!isBinaryDigit(ch)) {
+                				reportScannerError("Underscores have to be within digits.");
+                			}
+                		} else {
+            				nextCh();
+            				reportScannerError("Underscores have to be within digits.");
+            			}
+                	} else {
+                		buffer.append(ch);
+                		nextCh();
+                	}
+        		}
+        		
+        		
+        		return new TokenInfo(INT_LITERAL, String.valueOf(Integer.parseInt(buffer.toString(), 2)), line);
+        	} else {
+        		while (ch == '0' || ch == '_') {
+        			if (ch == '_') {
+        				nextCh();
+        				if (!isDigit(ch)) {
+        					reportScannerError("Underscores have to be within digits.");
+        				}
+        			} else {
+            			nextCh();	
+        			}
+        		}
+        		
+        		if (!isDigit(ch)) {
+                    return new TokenInfo(INT_LITERAL, "0", line);
+        		}
+        	}
+        	
+        // case 0 should enter the numeric case when a zero is followed by other numbers
         case '1':
         case '2':
         case '3':
@@ -349,11 +411,48 @@ class Scanner {
         case '8':
         case '9':
             buffer = new StringBuffer();
-            while (isDigit(ch)) {
-                buffer.append(ch);
-                nextCh();
+            boolean isDouble = false;
+            while (isDigit(ch) || ch == '.' || ch == 'e' || ch == '_') {
+            	if (ch == '.') {
+            		if (isDouble) {
+            			reportScannerError("Found decimal where digit expected");
+            			nextCh();
+            			return new TokenInfo(DOUBLE_LITERAL, buffer.toString(), line);
+            		} else {
+            			isDouble = true;
+            		}
+            	}
+            	
+            	if (ch == '_') {
+            		if (isDigit(prech) || prech == '_') {
+            			nextCh();
+            			if (!isDigit(ch)) {
+            				reportScannerError("Underscores have to be within digits.");
+            			}
+            		} else {
+        				nextCh();
+        				reportScannerError("Underscores have to be within digits.");
+        			}
+            	} else {
+            		buffer.append(ch);
+            		nextCh();
+            	}
             }
-            return new TokenInfo(INT_LITERAL, buffer.toString(), line);
+            
+            if (ch == 'f' || ch == 'F' && isDouble) {
+            	nextCh();
+            	return new TokenInfo(FLOAT_LITERAL, buffer.toString(), line);
+            } else if (ch == 'd' || ch == 'D' || isDouble) {
+            	nextCh();
+            	return new TokenInfo(DOUBLE_LITERAL, buffer.toString(), line);
+            } else if (ch == 'l' || ch == 'L' && !isDouble) {
+            	nextCh();
+            	return new TokenInfo(LONG_LITERAL, buffer.toString(), line);
+            } else {
+            	return new TokenInfo(INT_LITERAL, buffer.toString(), line);	
+            }
+            
+            
         default:
             if (isIdentifierStart(ch)) {
                 buffer = new StringBuffer();
@@ -456,6 +555,32 @@ class Scanner {
 
     private boolean isDigit(char c) {
         return (c >= '0' && c <= '9');
+    }
+
+    /**
+     * Return true if the specified character is a hexadecimal digit (0-F);
+     * false otherwise.
+     * 
+     * @param c
+     *            character.
+     * @return true or false.
+     */
+
+    private boolean isHexDigit(char c) {
+        return ((c >= '0' && c <= '9') || (ch <= 'F' && ch >= 'A') || (ch <= 'f' && ch >= 'a'));
+    }
+    
+    /**
+     * Return true if the specified character is a binary digit (0-1);
+     * false otherwise.
+     * 
+     * @param c
+     *            character.
+     * @return true or false.
+     */
+
+    private boolean isBinaryDigit(char c) {
+        return (c == '1' || c == '0');
     }
 
     /**
