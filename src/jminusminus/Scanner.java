@@ -341,16 +341,16 @@ class Scanner {
         	if (ch == 'x' || ch == 'X') {
         		nextCh();
         		
+        		if (ch == '_') {
+        			nextCh();
+    				reportScannerError("Underscores have to be within digits.");
+        		}
+        		
         		buffer = new StringBuffer();
         		while(isHexDigit(ch) || ch == '_') {
         			if (ch == '_') {
-                		if (isHexDigit(prech) || prech == '_') {
-                			nextCh();
-                			if (!isHexDigit(ch)) {
-                				reportScannerError("Underscores have to be within digits.");
-                			}
-                		} else {
-            				nextCh();
+            			nextCh();
+            			if (!isHexDigit(ch)) {
             				reportScannerError("Underscores have to be within digits.");
             			}
                 	} else {
@@ -359,20 +359,27 @@ class Scanner {
                 	}
         		}
         		
-        		return new TokenInfo(INT_LITERAL, String.valueOf(Integer.parseInt(buffer.toString(), 16)), line);
+        		if (prech == 'X' || prech == 'x') {
+        			reportScannerError("Unexpected end of hexidecimal number.");
+        			return new TokenInfo(INT_LITERAL, "0", line);
+        		} else if (ch == 'L' || ch == 'l') {
+        			return new TokenInfo(LONG_LITERAL, String.valueOf(Integer.parseInt(buffer.toString(), 16)), line);
+        		} else {
+        			return new TokenInfo(INT_LITERAL, String.valueOf(Integer.parseInt(buffer.toString(), 16)), line);	
+        		}
         	} else if (ch == 'b' || ch == 'B') {
         		nextCh();
+
+        		if (ch == '_') {
+        			nextCh();
+    				reportScannerError("Underscores have to be within digits.");
+        		}
         		
         		buffer = new StringBuffer();
         		while(isBinaryDigit(ch) || ch == '_') {
         			if (ch == '_') {
-                		if (isBinaryDigit(prech) || prech == '_') {
-                			nextCh();
-                			if (!isBinaryDigit(ch)) {
-                				reportScannerError("Underscores have to be within digits.");
-                			}
-                		} else {
-            				nextCh();
+            			nextCh();
+            			if (!isBinaryDigit(ch)) {
             				reportScannerError("Underscores have to be within digits.");
             			}
                 	} else {
@@ -381,23 +388,34 @@ class Scanner {
                 	}
         		}
         		
-        		
-        		return new TokenInfo(INT_LITERAL, String.valueOf(Integer.parseInt(buffer.toString(), 2)), line);
+        		if (prech == 'B' || prech == 'b') {
+        			reportScannerError("Unexpected end of binary number.");
+        			return new TokenInfo(INT_LITERAL, "0", line);
+        		} else if (ch == 'L' || ch == 'l') {
+        			return new TokenInfo(LONG_LITERAL, String.valueOf(Integer.parseInt(buffer.toString(), 2)), line);
+        		} else {
+        			return new TokenInfo(INT_LITERAL, String.valueOf(Integer.parseInt(buffer.toString(), 2)), line);	
+        		}
         	} else {
         		while (ch == '0' || ch == '_') {
         			if (ch == '_') {
         				nextCh();
-        				if (!isDigit(ch)) {
-        					reportScannerError("Underscores have to be within digits.");
-        				}
         			} else {
             			nextCh();	
         			}
         		}
         		
         		if (!isDigit(ch)) {
-                    return new TokenInfo(INT_LITERAL, "0", line);
+        			if (prech == '_') {
+        				reportScannerError("Underscores have to be within digits.");
+        			} else if (ch == 'L' || ch == 'l') {
+                        return new TokenInfo(LONG_LITERAL, "0", line);
+        			} else {
+                        return new TokenInfo(INT_LITERAL, "0", line);
+        			}
         		}
+        		
+        		//start handling octal
         	}
         	
         // case 0 should enter the numeric case when a zero is followed by other numbers
