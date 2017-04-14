@@ -332,7 +332,12 @@ class Scanner {
             return new TokenInfo(STRING_LITERAL, buffer.toString(), line);
         case '.':
             nextCh();
-            return new TokenInfo(DOT, line);
+            
+            if (isDigit(ch)) {
+            	return getNumber(10);
+            } else {
+            	return new TokenInfo(DOT, line);            	
+            }
         case EOFCH:
             return new TokenInfo(EOF, line);
         case '0':
@@ -340,63 +345,11 @@ class Scanner {
         	
         	if (ch == 'x' || ch == 'X') {
         		nextCh();
-        		
-        		if (ch == '_') {
-        			nextCh();
-    				reportScannerError("Underscores have to be within digits.");
-        		}
-        		
-        		buffer = new StringBuffer();
-        		while(isHexDigit(ch) || ch == '_') {
-        			if (ch == '_') {
-            			nextCh();
-            			if (!isHexDigit(ch)) {
-            				reportScannerError("Underscores have to be within digits.");
-            			}
-                	} else {
-                		buffer.append(ch);
-                		nextCh();
-                	}
-        		}
-        		
-        		if (prech == 'X' || prech == 'x') {
-        			reportScannerError("Unexpected end of hexidecimal number.");
-        			return new TokenInfo(INT_LITERAL, "0", line);
-        		} else if (ch == 'L' || ch == 'l') {
-        			return new TokenInfo(LONG_LITERAL, String.valueOf(Integer.parseInt(buffer.toString(), 16)), line);
-        		} else {
-        			return new TokenInfo(INT_LITERAL, String.valueOf(Integer.parseInt(buffer.toString(), 16)), line);	
-        		}
+        		return getNumber(16);
         	} else if (ch == 'b' || ch == 'B') {
         		nextCh();
-
-        		if (ch == '_') {
-        			nextCh();
-    				reportScannerError("Underscores have to be within digits.");
-        		}
-        		
-        		buffer = new StringBuffer();
-        		while(isBinaryDigit(ch) || ch == '_') {
-        			if (ch == '_') {
-            			nextCh();
-            			if (!isBinaryDigit(ch)) {
-            				reportScannerError("Underscores have to be within digits.");
-            			}
-                	} else {
-                		buffer.append(ch);
-                		nextCh();
-                	}
-        		}
-        		
-        		if (prech == 'B' || prech == 'b') {
-        			reportScannerError("Unexpected end of binary number.");
-        			return new TokenInfo(INT_LITERAL, "0", line);
-        		} else if (ch == 'L' || ch == 'l') {
-        			return new TokenInfo(LONG_LITERAL, String.valueOf(Integer.parseInt(buffer.toString(), 2)), line);
-        		} else {
-        			return new TokenInfo(INT_LITERAL, String.valueOf(Integer.parseInt(buffer.toString(), 2)), line);	
-        		}
-        	} else {
+        		return getNumber(2);
+        	} else { // note this is an octal number
         		while (ch == '0' || ch == '_') {
         			if (ch == '_') {
         				nextCh();
@@ -410,15 +363,14 @@ class Scanner {
         				reportScannerError("Underscores have to be within digits.");
         			} else if (ch == 'L' || ch == 'l') {
                         return new TokenInfo(LONG_LITERAL, "0", line);
-        			} else {
+        			} else if (ch != '.') {
                         return new TokenInfo(INT_LITERAL, "0", line);
         			}
         		}
         		
-        		//start handling octal
+        		return getNumber(8);
         	}
         	
-        // case 0 should enter the numeric case when a zero is followed by other numbers
         case '1':
         case '2':
         case '3':
@@ -428,48 +380,7 @@ class Scanner {
         case '7':
         case '8':
         case '9':
-            buffer = new StringBuffer();
-            boolean isDouble = false;
-            while (isDigit(ch) || ch == '.' || ch == 'e' || ch == '_') {
-            	if (ch == '.') {
-            		if (isDouble) {
-            			reportScannerError("Found decimal where digit expected");
-            			nextCh();
-            			return new TokenInfo(DOUBLE_LITERAL, buffer.toString(), line);
-            		} else {
-            			isDouble = true;
-            		}
-            	}
-            	
-            	if (ch == '_') {
-            		if (isDigit(prech) || prech == '_') {
-            			nextCh();
-            			if (!isDigit(ch)) {
-            				reportScannerError("Underscores have to be within digits.");
-            			}
-            		} else {
-        				nextCh();
-        				reportScannerError("Underscores have to be within digits.");
-        			}
-            	} else {
-            		buffer.append(ch);
-            		nextCh();
-            	}
-            }
-            
-            if (ch == 'f' || ch == 'F' && isDouble) {
-            	nextCh();
-            	return new TokenInfo(FLOAT_LITERAL, buffer.toString(), line);
-            } else if (ch == 'd' || ch == 'D' || isDouble) {
-            	nextCh();
-            	return new TokenInfo(DOUBLE_LITERAL, buffer.toString(), line);
-            } else if (ch == 'l' || ch == 'L' && !isDouble) {
-            	nextCh();
-            	return new TokenInfo(LONG_LITERAL, buffer.toString(), line);
-            } else {
-            	return new TokenInfo(INT_LITERAL, buffer.toString(), line);	
-            }
-            
+            return getNumber(10);
             
         default:
             if (isIdentifierStart(ch)) {
@@ -524,13 +435,186 @@ class Scanner {
         case '\\':
             nextCh();
             return "\\\\";
+        case 'u':
+        	StringBuffer buffer = new StringBuffer();
+        	buffer.append("\\u");
+        	nextCh();
+        	int count = 0;
+        	
+        	while (isHexDigit(ch)) {
+        		count++;
+        		
+        		if (count == 5) {
+            		reportScannerError("escape sequence too large");
+        		} else if (count < 5	) {
+            		buffer.append(ch);
+            		nextCh();
+        		}
+        	}
+        	
+        	return buffer.toString();
         default:
             reportScannerError("Badly formed escape: \\%c", ch);
             nextCh();
             return "";
         }
     }
+    
+    /**
+     * Get a number. Returns a FLOAT_LITERAL, DOUBLE_LITERAL, INT_LITERAL
+     * or LONG_LITERAL
+     * 
+     * @return a number
+     */
 
+    private TokenInfo getNumber(int base) {
+    	StringBuffer buffer = new StringBuffer();
+    	
+    	if (prech != '.') { // otherwise we are in the middle of a double
+	        buffer.append(getInt(base));
+	        
+	        if (ch != '.') {
+		        if (ch == 'L' || ch == 'l') {
+		        	nextCh();
+		        	return new TokenInfo(LONG_LITERAL, buffer.toString(), line);
+		        } else {
+		        	return new TokenInfo(INT_LITERAL, buffer.toString(), line);
+		        }
+	        }
+	    	
+	        
+	        /* otherwise we are handling a floating point number which also means 
+	         * that getInt returned any octal numbers as decimal
+	         */
+
+	    	buffer.append('.');	        
+	        nextCh();
+    	} else {
+    		buffer.append("0.");
+    	}
+
+    	
+        buffer.append(getInt(base == 8 ? 10 : base));
+        
+        if ((base == 16 && (ch == 'p' || ch == 'P')) || (base != 16 && ch == 'e')) {
+        	buffer.append(ch);
+        	nextCh();
+        	
+        	if (ch == '+' || ch == '-') {
+        		buffer.append(ch);
+        		nextCh();
+        	}
+        	
+        	buffer.append(getInt(10));
+        } else if (base == 16) {
+        	reportScannerError("malformed hexidecimal floating point literal");
+        }
+        
+        if (ch == 'F' || ch == 'f') {
+        	nextCh();
+        	return new TokenInfo(FLOAT_LITERAL, buffer.toString(), line);
+        } else {
+        	if (ch == 'D' || ch == 'd') {
+        		nextCh();
+        	}
+        	return new TokenInfo(DOUBLE_LITERAL, buffer.toString(), line);
+        }    
+    }
+
+    /**
+     * Get an integer. Returns a scanned integer for the given base.
+     * 
+     * @return a number
+     */
+
+    private String getInt(int base) {
+    	StringBuffer buffer = new StringBuffer();
+        DigitChecker digitTester = null;
+    	boolean couldBeDouble = false;
+        
+    	if (ch == '.') {
+    		buffer.append('0');
+    	}
+    	
+    	if (base == 10) {
+    		digitTester = new DigitChecker() {
+				@Override
+				public boolean isDigitOfBase(char c) {
+					return isDigit(c);
+				}
+    		};
+    	} else if (base == 16) {
+    		digitTester = new DigitChecker() {
+				@Override
+				public boolean isDigitOfBase(char c) {
+					return isHexDigit(c);
+				}
+    		};
+    	} else if (base == 8) {
+    		digitTester = new DigitChecker() {
+				@Override
+				public boolean isDigitOfBase(char c) {
+					return c >= '0' && c <= '7';
+				}
+    		};
+    	} else if (base == 2) {
+    		digitTester = new DigitChecker() {
+				@Override
+				public boolean isDigitOfBase(char c) {
+					return c == '0' || c == '1';
+				}
+    		};
+    	} else {
+    		reportScannerError("unknown base");
+    		return "0";
+    	}
+    	
+    	do {
+    		while (digitTester.isDigitOfBase(ch) || ch == '_') {
+            	if (ch == '_') {
+            		if (digitTester.isDigitOfBase(prech) || prech == '_') {
+            			nextCh();
+            			if (!digitTester.isDigitOfBase(ch)) {
+            				reportScannerError("Underscores have to be within digits.");
+            			}
+            		} else {
+        				nextCh();
+        				reportScannerError("Underscores have to be within digits.");
+        			}
+            	} else {
+            		buffer.append(ch);
+            		nextCh();
+            	}
+            }
+    		
+    		if (base == 8 && isDigit(ch)) {
+    			couldBeDouble = true;
+    			digitTester = new DigitChecker() {
+    				public boolean isDigitOfBase(char c) {
+    					return isDigit(c);
+    				}
+    			};
+    		}
+    	} while (couldBeDouble);
+        
+    	if (ch == '.') {
+    		return buffer.toString();
+    	} else if (couldBeDouble) {
+    		reportScannerError("digit out of range of octal number");
+    	}
+    	
+    	if (buffer.length() == 0) {
+    		if (ch == '.' || prech == '.') {
+    			return "0";
+    		} else {
+    			reportScannerError("no digits where number expected");
+    			return "";
+    		}
+    	}
+        
+		return String.valueOf(Integer.parseInt(buffer.toString(), base));
+    }
+    
     /**
      * Advance ch to the next character from input, and update the line number.
      */
@@ -575,32 +659,12 @@ class Scanner {
         return (c >= '0' && c <= '9');
     }
 
-    /**
-     * Return true if the specified character is a hexadecimal digit (0-F);
-     * false otherwise.
-     * 
-     * @param c
-     *            character.
-     * @return true or false.
-     */
-
+    
     private boolean isHexDigit(char c) {
-        return ((c >= '0' && c <= '9') || (ch <= 'F' && ch >= 'A') || (ch <= 'f' && ch >= 'a'));
+    	return ((c >= '0' && c <= '9') || (c <= 'F' && c >= 'A') || (c <= 'f' && c >= 'a'));
     }
     
-    /**
-     * Return true if the specified character is a binary digit (0-1);
-     * false otherwise.
-     * 
-     * @param c
-     *            character.
-     * @return true or false.
-     */
-
-    private boolean isBinaryDigit(char c) {
-        return (c == '1' || c == '0');
-    }
-
+    
     /**
      * Return true if the specified character is a whitespace; false otherwise.
      * 
@@ -666,6 +730,14 @@ class Scanner {
         return fileName;
     }
 
+}
+
+/**
+ * An interface to allow discrimination between characters representing numbers
+ * in a given base.
+ */
+interface DigitChecker {
+	boolean isDigitOfBase(char c);
 }
 
 /**

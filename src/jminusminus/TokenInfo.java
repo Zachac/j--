@@ -27,7 +27,7 @@ enum TokenKind {
     		BSHL("<<"), BSHR(">>"), BSHRUN(">>>"), PLUS_ASSIGN("+="), STAR("*"), DIV("/"), LPAREN(
             "("), RPAREN(")"), LCURLY("{"), RCURLY("}"), LBRACK("["), RBRACK(
             "]"), SEMI(";"), COMMA(","), DOT("."), TERNIF("?"), TERNELSE(":"), IDENTIFIER("<IDENTIFIER>"), INT_LITERAL(
-            "<INT_LITERAL>"), LONG_LITERAL("<FLOAT_LITERAL>"),  FLOAT_LITERAL("<FLOAT_LITERAL>"), DOUBLE_LITERAL("<DOUBLE_LITERAL>"), CHAR_LITERAL("<CHAR_LITERAL>"), STRING_LITERAL(
+            "<INT_LITERAL>"), LONG_LITERAL("<LONG_LITERAL>"),  FLOAT_LITERAL("<FLOAT_LITERAL>"), DOUBLE_LITERAL("<DOUBLE_LITERAL>"), CHAR_LITERAL("<CHAR_LITERAL>"), STRING_LITERAL(
             "<STRING_LITERAL>");
 
     /** The token's string representation. */

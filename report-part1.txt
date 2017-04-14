@@ -1,0 +1,44 @@
+PART 1 REPORT FOR TCSS421A SPRING 2017 PROGRAMMING PROJECT
+AUTHOR: ZACHARY CHANDLER
+
+For this part I had very little trouble with the first 3 problems. However
+figuring out how to find literals proved to become quite a complex problem.
+
+To Ignore multiline comments I created another variable in the object itself
+called prech which would be the previous character that was read. This
+simplified my code a bit so that I only had to check if prech and ch matched
+the multiline start or end symbols. However, I realize now that I could have
+accomplished this without prech, so if I had more time I would go back and
+change that.
+
+In order to scan all java operators I simply added the necessary tokens and
+then modified the cases in getNextToken to return the new tokens.
+
+In order to scan all the java reserved words, I simply added the necessary
+tokens and then added them in the constructor.
+
+For these last three problems I made a solution that would handle them all.
+I created a function called getNumber that relied on a simpler function
+called getInt. From there, I used getInt to get the first part of all numbers.
+Then I could check to see if the following character was a decimal, or a
+long suffix. From there I returned a long or int if required and was left
+with what should be a floating point number. Then I got another integer and
+was able to append that to the end of the decimal. From there I just needed
+to test and handle for exponents, and then a float or double suffix.
+
+I did need to extend the character literal in order to support '\u', but that
+wasn't terribly hard. Strings were already implemented in Scanner so I didn't
+touch those.
+
+In order to find hexadecimal, octal and binary numbers, I knew that they
+would start with a zero. So I modified the zero case in order to detect these
+numbers. From there I could simply pass the given base to getNumber and it
+was automatically handled by getInt.
+
+My only test files were:
+    literals.java
+    operators.java
+    keywords.java
+
+None of them compiled and were used exclusively with the tokenizer option
+with the compiler.
