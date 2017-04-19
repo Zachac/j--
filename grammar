@@ -73,8 +73,8 @@ assignmentExpression ::= conditionalExpression  // must be a valid lhs
                            [(ASSIGN | PLUS_ASSIGN) assignmentExpression]
 
 conditionalExpression ::= conditionalOrExpression // level 12
-                              {TERNARY_IF conditionalOrExpression
-                              TERNARY_ELSE conditionalOrExpression}
+                              {QMARK conditionalOrExpression
+                              COLON conditionalOrExpression}
 
 conditionalOrExpression ::= conditionalAndExpression // level 11
                               {LOR conditionalAndExpression}
@@ -95,11 +95,11 @@ equalityExpression ::= relationalExpression  // level 6
                          {(EQUAL | NOT_EQUAL) relationalExpression}
 
 relationalExpression ::= shiftExpression       // level 5
-                           [(GT | GTE | LE | LT) shiftExpression
+                           [(GT | GTEQ | LE | LT) shiftExpression
                            | INSTANCEOF referenceType]
 
 shiftExpression ::= additiveExpression // level 4
-                        {(RSHFT | LSHFT | URSHFT) additiveExpression}
+                        {(BSHR | BSHL | BSHRU) additiveExpression}
                            
 additiveExpression ::= multiplicativeExpression // level 3
                          {(PLUS | MINUS) multiplicativeExpression}

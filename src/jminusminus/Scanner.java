@@ -202,10 +202,10 @@ class Scanner {
             }
         case '?':
             nextCh();
-            return new TokenInfo(TERNIF, line);
+            return new TokenInfo(QMARK, line);
         case ':':
             nextCh();
-            return new TokenInfo(TERNELSE, line);
+            return new TokenInfo(COLON, line);
         case '=':
             nextCh();
             if (ch == '=') {
