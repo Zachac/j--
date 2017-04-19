@@ -117,8 +117,7 @@ enum TokenKind {
     BSHL_ASSIGN("<<="), 
     STAR_ASSIGN("*="),
     MOD_ASSIGN("%="), 
-    DIV_ASSIGN("/="), 
-    BWNOT_ASSIGN("~=");
+    DIV_ASSIGN("/=");
 
     /** The token's string representation. */
     private String image;

@@ -70,7 +70,7 @@ statementExpression ::= expression // but must have side-effect, eg i++
 expression ::= assignmentExpression
 
 assignmentExpression ::= conditionalExpression  // must be a valid lhs
-                           [(ASSIGN | PLUS_ASSIGN) assignmentExpression]
+                           [(ASSIGN | PLUS_ASSIGN | MINUS_ASSIGN | STAR_ASSIGN | DIV_ASSIGN | BSHL_ASSIGN | BSHR_ASSIGN | BSHRU_ASSIGN | BWAND_ASSIGN | BWOR_ASSIGN | BWXOR_ASSIGN) assignmentExpression]
 
 conditionalExpression ::= conditionalOrExpression // level 12
                               {QMARK conditionalOrExpression

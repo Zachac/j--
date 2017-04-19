@@ -283,12 +283,7 @@ class Scanner {
         	}
         case '~':
         	nextCh();
-        	if (ch == '=') {
-        		nextCh();
-        		return new TokenInfo(BWNOT_ASSIGN, line);
-        	} else {
-        		return new TokenInfo(BWNOT, line);
-        	}
+        	return new TokenInfo(BWNOT, line);
         case '>':
             nextCh();
             if (ch == '=') {
