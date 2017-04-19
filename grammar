@@ -20,7 +20,7 @@ classBody ::= LCURLY {modifiers memberDecl} RCURLY
 memberDecl ::= IDENTIFIER            // constructor
                  formalParameters block
              | (VOID | type) IDENTIFIER  // method
-                 formalParameters
+                 formalParameters [THROWS qualifiedIdentifier {COMMA qualifiedIdentifier}]
                  (block | SEMI)
              | type variableDeclarators SEMI // field
 
@@ -32,10 +32,31 @@ blockStatement ::= localVariableDeclarationStatement
 statement ::= block
             | IF parExpression statement [ELSE statement]
             | WHILE parExpression statement 
+            | FOR forExpression statement
+            | SWITCH switchBlock
+            | TRY statement CATCH parExpression statement [FINALLY statement]
+            | THROW expression SEMI
             | RETURN [expression] SEMI
             | SEMI 
             | statementExpression SEMI
 
+forExpression ::= simpleForExpression | enhancedForExpression
+
+simpleForExpression ::= RPAREN
+                            statementExpression SEMI
+                            expression SEMI
+                            statementExpression SEMI
+                        LPAREN
+                        
+enhancedForExpression ::= RPAREN
+                            type identifier COLON identifier
+                          LPAREN
+            
+switchBlock ::= RPAREN
+                    {CASE COLON {blockStatement}}
+                    [DEFAULT COLON {blockStatement}]
+                LCURLY
+            
 formalParameters ::= LPAREN 
                        [formalParameter {COMMA formalParameter}]
                      RPAREN
