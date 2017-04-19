@@ -377,9 +377,9 @@ public class Parser {
      * 
      * @return an instance of TypeName.
      */
-
+    
     private TypeName qualifiedIdentifier() {
-        int line = scanner.token().line();
+    	int line = scanner.token().line();
         mustBe(IDENTIFIER);
         String qualifiedIdentifier = scanner.previousToken().image();
         while (have(DOT)) {
@@ -1361,7 +1361,7 @@ public class Parser {
      *            type of the array.
      * @return an AST for a newArrayDeclarator.
      */
-
+	
     private JNewArrayOp newArrayDeclarator(int line, Type type) {
         ArrayList<JExpression> dimensions = new ArrayList<JExpression>();
         mustBe(LBRACK);

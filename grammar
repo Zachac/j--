@@ -35,7 +35,7 @@ statement ::= block
             | RETURN [expression] SEMI
             | SEMI 
             | statementExpression SEMI
-
+            
 formalParameters ::= LPAREN 
                        [formalParameter {COMMA formalParameter}]
                      RPAREN
@@ -60,7 +60,7 @@ arguments ::= LPAREN [expression {COMMA expression}] RPAREN
 
 type ::= referenceType | basicType
 
-basicType ::= BOOLEAN | CHAR | INT 
+basicType ::= BOOLEAN | CHAR | INT | LONG | DOUBLE | FLOAT
 
 referenceType ::= basicType LBRACK RBRACK {LBRACK RBRACK}
                 | qualifiedIdentifier {LBRACK RBRACK}
@@ -69,27 +69,47 @@ statementExpression ::= expression // but must have side-effect, eg i++
 
 expression ::= assignmentExpression
 
-assignmentExpression ::= conditionalAndExpression  // must be a valid lhs
-                           [(ASSIGN | PLUS_ASSIGN) assignmentExpression]
+assignmentExpression ::= conditionalExpression  // must be a valid lhs
+                           [(ASSIGN | PLUS_ASSIGN | MINUS_ASSIGN | STAR_ASSIGN | DIV_ASSIGN | BSHL_ASSIGN | BSHR_ASSIGN | BSHRU_ASSIGN | BWAND_ASSIGN | BWOR_ASSIGN | BWXOR_ASSIGN) assignmentExpression]
 
-conditionalAndExpression ::= equalityExpression // level 10
-                               {LAND equalityExpression}
+conditionalExpression ::= conditionalOrExpression // level 12
+                              {QMARK conditionalOrExpression
+                              COLON conditionalOrExpression}
 
+conditionalOrExpression ::= conditionalAndExpression // level 11
+                              {LOR conditionalAndExpression}
+                          
+conditionalAndExpression ::= bitwiseOrExpression // level 10
+                               {LAND bitwiseOrExpression}
+                               
+bitwiseOrExpression ::= bitwiseXOrExpression // level 9
+                            {BWOR bitwiseXOrExpression}
+
+bitwiseXOrExpression ::= bitwiseAndExpression // level 8
+                            {BWXOR bitwiseAndExpression}
+
+bitwiseAndExpression ::= equalityExpression // level 7
+                            {BWAND equalityExpression}
+                            
 equalityExpression ::= relationalExpression  // level 6
-                         {EQUAL relationalExpression}
+                         {(EQUAL | NOT_EQUAL) relationalExpression}
 
-relationalExpression ::= additiveExpression       // level 5
-                           [(GT | LE) additiveExpression
+relationalExpression ::= shiftExpression       // level 5
+                           [(GT | GTEQ | LE | LT) shiftExpression
                            | INSTANCEOF referenceType]
 
+shiftExpression ::= additiveExpression // level 4
+                        {(BSHR | BSHL | BSHRU) additiveExpression}
+                           
 additiveExpression ::= multiplicativeExpression // level 3
                          {(PLUS | MINUS) multiplicativeExpression}
 
 multiplicativeExpression ::= unaryExpression       // level 2
-                               {STAR unaryExpression}
+                               {(STAR | DIV | MOD) unaryExpression}
 
 unaryExpression ::= INC unaryExpression  // level 1
                   | MINUS unaryExpression
+                  | BWNOT unaryExpression
                   | simpleUnaryExpression
 
 simpleUnaryExpression ::= LNOT unaryExpression
@@ -122,5 +142,6 @@ creator ::= (basicType | qualifiedIdentifier)
 newArrayDeclarator ::= LBRACK expression RBRACK 
                          {LBRACK expression RBRACK} {LBRACK RBRACK}
 
-literal ::= INT_LITERAL | CHAR_LITERAL | STRING_LITERAL
-          | TRUE        | FALSE        | NULL
+literal ::= INT_LITERAL | CHAR_LITERAL | STRING_LITERAL | LONG_LITERAL
+          | TRUE        | FALSE        | NULL           | DOUBLE_LITERAL
+          | FLOAT_LITERAL

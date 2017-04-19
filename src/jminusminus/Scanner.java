@@ -155,7 +155,12 @@ class Scanner {
                 	}
                 } else {
                 	line = input.line();
-                    return new TokenInfo(DIV, line);
+                	if (ch == '=') {
+                		nextCh();
+                		return new TokenInfo(DIV_ASSIGN, line);
+                	} else {                		
+                		return new TokenInfo(DIV, line);
+                	}
                 }
             } else {
                 moreWhiteSpace = false;
@@ -189,13 +194,18 @@ class Scanner {
             return new TokenInfo(COMMA, line);
         case '%':
             nextCh();
-            return new TokenInfo(MOD, line);
+            if (ch == '=') {
+            	nextCh();
+            	return new TokenInfo(MOD_ASSIGN, line); 
+            } else {            	
+            	return new TokenInfo(MOD, line);
+            }
         case '?':
             nextCh();
-            return new TokenInfo(TERNIF, line);
+            return new TokenInfo(QMARK, line);
         case ':':
             nextCh();
-            return new TokenInfo(TERNELSE, line);
+            return new TokenInfo(COLON, line);
         case '=':
             nextCh();
             if (ch == '=') {
@@ -213,7 +223,12 @@ class Scanner {
             return new TokenInfo(LNOT, line);
         case '*':
             nextCh();
-            return new TokenInfo(STAR, line);
+            if (ch == '=') {
+            	nextCh();
+            	return new TokenInfo(STAR_ASSIGN, line);
+            } else {            	
+            	return new TokenInfo(STAR, line);
+            }
         case '+':
             nextCh();
             if (ch == '=') {
@@ -230,6 +245,9 @@ class Scanner {
             if (ch == '-') {
                 nextCh();
                 return new TokenInfo(DEC, line);
+            } else if (ch == '=') {
+            	nextCh();
+            	return new TokenInfo(MINUS_ASSIGN, line);
             } else {
                 return new TokenInfo(MINUS, line);
             }
@@ -238,6 +256,9 @@ class Scanner {
             if (ch == '&') {
                 nextCh();
                 return new TokenInfo(LAND, line);
+            } else if (ch == '=') {
+            	nextCh();
+            	return new TokenInfo(BWAND_ASSIGN, line);
             } else {
                 return new TokenInfo(BWAND, line);
             }
@@ -246,12 +267,20 @@ class Scanner {
         	if (ch == '|') {
         		nextCh();
         		return new TokenInfo(LOR, line);
+            } else if (ch == '=') {
+            	nextCh();
+            	return new TokenInfo(BWOR_ASSIGN, line);
         	} else {
         		return new TokenInfo(BWOR, line);
         	}
         case '^':
         	nextCh();
-        	return new TokenInfo(BWXOR, line);
+        	if (ch == '=') {
+        		nextCh();
+        		return new TokenInfo(BWXOR_ASSIGN, line);
+        	} else {
+        		return new TokenInfo(BWXOR, line);        		
+        	}
         case '~':
         	nextCh();
         	return new TokenInfo(BWNOT, line);
@@ -264,7 +293,15 @@ class Scanner {
             	nextCh();
             	if (ch == '>') {
             		nextCh();
-            		return new TokenInfo(BSHRUN, line);
+            		if (ch == '=') {
+            			nextCh();
+            			return new TokenInfo(BSHRUN_ASSIGN, line);
+            		} else {            			
+            			return new TokenInfo(BSHRUN, line);
+            		}
+            	} else if (ch == '=') {
+            		nextCh();
+            		return new TokenInfo(BSHR_ASSIGN, line);
             	} else {
             		return new TokenInfo(BSHR, line);
             	}
@@ -278,7 +315,12 @@ class Scanner {
                 return new TokenInfo(LE, line);
             } else if (ch == '<') {
             	nextCh();
-            	return new TokenInfo(BSHL, line);
+            	if (ch == '=') {
+            		nextCh();
+            		return new TokenInfo(BSHL_ASSIGN, line);
+            	} else {
+            		return new TokenInfo(BSHL, line);            		
+            	}
             } else {
                 return new TokenInfo(LT, line);
             }
