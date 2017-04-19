@@ -12,13 +12,16 @@ ABSTRACT    ::= "abstract"
 BOOLEAN     ::= "boolean"
 CHAR        ::= "char"
 CLASS       ::= "class"
+DOUBLE      ::= "double"
 ELSE        ::= "else"
 EXTENDS     ::= "extends"
 FALSE       ::= "false"
+FLOAT       ::= "float"
 IF          ::= "if"
 IMPORT      ::= "import"
 INSTANCEOF  ::= "instanceof"
 INT         ::= "int"
+LONG        ::= "long"
 NEW         ::= "new"
 NULL        ::= "null"
 PACKAGE     ::= "package"
@@ -35,16 +38,32 @@ WHILE       ::= "while"
 
 // Operators
 ASSIGN      ::= "="
+BWAND       ::= "&"
+BWNOT       ::= "~"
+BWOR        ::= "|"
+BWXOR       ::= "^"
+DIV         ::= "/"
 EQUAL       ::= "=="
 GT          ::= ">"
+GTE         ::= ">="
 INC         ::= "++"
 LAND        ::= "&&"
 LE          ::= "<="
+LSHFT       ::= "<<"
+LT          ::= "<"
 LNOT        ::= "!"
+LOR         ::= "||"
 MINUS       ::= "-"
+MOD         ::= "%"
+NOT_EQUAL   ::= "!="
 PLUS        ::= "+"
 PLUS_ASSIGN ::= "+="
+RSHFT       ::= ">>"
 STAR        ::= "*"
+TERNARY_IF  ::= "?"
+TERNARY_ELSE::= ":"
+URSHFT      ::= ">>>"
+
 
 // Separators
 COMMA       ::= ","
@@ -61,7 +80,16 @@ SEMI        ::= ";"
 IDENTIFIER ::= ("a"-"z"|"A"-"Z"|"_"|"$") {"a"-"z"|"A"-"Z"|"_"|"0"-"9"|"$"}
 
 // Literals
-INT_LITERAL    ::= "0" | ("1"-"9") {"0"-"9"}
+INT_LITERAL    ::= "0" | ("1"-"9") {{_} {"0"-"9"}}
+LONG_LITERAL   ::= "0" | ("1"-"9") {{_} {"0"-"9"}} (L | l)
+DOUBLE_LITERAL ::= ("" | ("0"-"9") {{_} {"0"-"9"}}) . 
+                   ("" | ("0"-"9") {{_} {"0"-"9"}}) 
+                   [e("0" | ("1"-"9") {{_} {"0"-"9"}})]
+                   [D | d]
+FLOAT_LITERAL  ::= ("" | ("0"-"9") {{_} {"0"-"9"}}) . 
+                   ("" | ("0"-"9") {{_} {"0"-"9"}}) 
+                   [e("0" | ("1"-"9") {{_} {"0"-"9"}})]
+                   (F | f)
 ESC            ::= "\\" ("n"|"r"|"t"|"b"|"f"|"'"|"\""|"\\")
 STRING_LITERAL ::= "\"" {ESC | ~("\""|"\\"|"\n"|"\r")} "\""
 CHAR_LITERAL   ::= "'" (ESC | ~("'"|"\n"|"\r"|"\\")) "'"
