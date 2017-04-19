@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<JCompilationUnit line="1">
+  <Source fileName="tests/pass/SimpleHelloWorld.java"/>
+  <Imports>
+    <Import name="java.lang.System"/>
+  </Imports>
+  <TypeDeclarations>
+    <JClassDeclaration line="3" name="SimpleHelloWorld" super="java.lang.Object">
+      <Modifiers>
+        <Modifier name="public"/>
+      </Modifiers>
+      <ClassBlock>
+      <JMethodDeclaration line="4" name="main" returnType="void">
+        <Modifiers>
+          <Modifier name="public"/>
+          <Modifier name="static"/>
+        </Modifiers>
+        <FormalParameters>
+          <JFormalParameter line="4" name="args" type="String[]"/>
+        </FormalParameters>
+        <Body>
+          <JBlock line="4">
+            <JStatementExpression line="5">
+              <JBinaryExpression line="5" type="" operator="+">
+                <Lhs>
+                  <JLiteralInt line="5" type="" value="2"/>
+                </Lhs>
+                <Rhs>
+                  <JLiteralInt line="5" type="" value="2"/>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+          </JBlock>
+        </Body>
+      </JMethodDeclaration>
+      </ClassBlock>
+    </JClassDeclaration>
+  </TypeDeclarations>
+</JCompilationUnit>

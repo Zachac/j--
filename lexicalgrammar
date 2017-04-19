@@ -9,16 +9,36 @@
 
 // Reserved words
 ABSTRACT    ::= "abstract"
+ASSERT      ::= "assert"
 BOOLEAN     ::= "boolean"
+BREAK       ::= "break"
+BYTE        ::= "byte"
+CASE        ::= "case"
+CATCH       ::= "catch"
 CHAR        ::= "char"
 CLASS       ::= "class"
+CONST       ::= "const"
+CONTINUE    ::= "continue"
+DOT         ::= "do"
+DOUBLE      ::= "double"
+DEFAULT     ::= "defualt"
 ELSE        ::= "else"
+ENUM        ::= "enum"
 EXTENDS     ::= "extends"
 FALSE       ::= "false"
+FINAL       ::= "final"
+FINALLY     ::= "finally"
+FLOAT       ::= "float"
+FOR         ::= "for"
+GOTO        ::= "goto"
 IF          ::= "if"
+IMPLEMENTS  ::= "implements"
 IMPORT      ::= "import"
 INSTANCEOF  ::= "instanceof"
+INTERFACE   ::= "interface"
 INT         ::= "int"
+LONG        ::= "long"
+NATIVE      ::= "native"
 NEW         ::= "new"
 NULL        ::= "null"
 PACKAGE     ::= "package"
@@ -26,25 +46,60 @@ PRIVATE     ::= "private"
 PROTECTED   ::= "protected"
 PUBLIC      ::= "public"
 RETURN      ::= "return"
+SHORT       ::= "short"
 STATIC      ::= "static"
+STRICTFP    ::= "strictfp"
 SUPER       ::= "super"
+SWITCH      ::= "switch"
+SYNCHRONIZED::= "synvchronized"
 THIS        ::= "this"
+THROW       ::= "throw"
+THROWS      ::= "throws"
+TRANSIENT   ::= "transient"
 TRUE        ::= "true"
+TRY         ::= "try"
 VOID        ::= "void"
+VOLATILE    ::= "volatile"
 WHILE       ::= "while"
 
 // Operators
 ASSIGN      ::= "="
+BSHL        ::= "<<"
+BSHL_ASSIGN ::= "<<="
+BSHR        ::= ">>"
+BSHR_ASSIGN ::= ">>="
+BSHRU       ::= ">>>"
+BSHRU_ASSIGN::= ">>>="
+BWAND       ::= "&"
+BWAND_ASSIGN::= "&="
+BWNOT       ::= "~"
+BWOR        ::= "|"
+BWOR_ASSIGN ::= "|="
+BWXOR       ::= "^"
+BWXOR_ASSIGN::= "^="
+DIV         ::= "/"
+DIV_ASSIGN  ::= "/="
 EQUAL       ::= "=="
 GT          ::= ">"
+GTEQ        ::= ">="
 INC         ::= "++"
 LAND        ::= "&&"
 LE          ::= "<="
+LT          ::= "<"
 LNOT        ::= "!"
+LOR         ::= "||"
 MINUS       ::= "-"
+MINUS_ASSIGN::= "-="
+MOD         ::= "%"
+MOD_ASSIGN  ::= "%="
+NOTEQUAL    ::= "!="
 PLUS        ::= "+"
 PLUS_ASSIGN ::= "+="
 STAR        ::= "*"
+STAR_ASSIGN ::= "*="
+QMARK       ::= "?"
+COLON       ::= ":"
+
 
 // Separators
 COMMA       ::= ","
@@ -61,7 +116,16 @@ SEMI        ::= ";"
 IDENTIFIER ::= ("a"-"z"|"A"-"Z"|"_"|"$") {"a"-"z"|"A"-"Z"|"_"|"0"-"9"|"$"}
 
 // Literals
-INT_LITERAL    ::= "0" | ("1"-"9") {"0"-"9"}
+INT_LITERAL    ::= "0" | ("1"-"9") {{_} {"0"-"9"}}
+LONG_LITERAL   ::= "0" | ("1"-"9") {{_} {"0"-"9"}} (L | l)
+DOUBLE_LITERAL ::= ("" | ("0"-"9") {{_} {"0"-"9"}}) . 
+                   ("" | ("0"-"9") {{_} {"0"-"9"}}) 
+                   [e("0" | ("1"-"9") {{_} {"0"-"9"}})]
+                   [D | d]
+FLOAT_LITERAL  ::= ("" | ("0"-"9") {{_} {"0"-"9"}}) . 
+                   ("" | ("0"-"9") {{_} {"0"-"9"}}) 
+                   [e("0" | ("1"-"9") {{_} {"0"-"9"}})]
+                   (F | f)
 ESC            ::= "\\" ("n"|"r"|"t"|"b"|"f"|"'"|"\""|"\\")
 STRING_LITERAL ::= "\"" {ESC | ~("\""|"\\"|"\n"|"\r")} "\""
 CHAR_LITERAL   ::= "'" (ESC | ~("'"|"\n"|"\r"|"\\")) "'"

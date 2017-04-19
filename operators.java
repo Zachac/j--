@@ -11,3 +11,10 @@
 instanceof
 
 ~ << >> >>> & ^ |
+
+
+// asignment operators
+  =   +=   -=
+ *=   /=   %=
+ &=   ^=   |=
+<<=  >>= >>>=
