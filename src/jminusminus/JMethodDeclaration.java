@@ -244,6 +244,19 @@ class JMethodDeclaration
             }
             p.println("</FormalParameters>");
         }
+        if (params instanceof JFromalParamaters && ((JFromalParamaters) params).getExceptions() != null) {
+            p.println("<Throws>");
+            for (TypeName exceptName : ((JFromalParamaters) params).getExceptions()) {
+                p.indentRight();
+                p.println("<Exception>");
+                p.indentRight();
+                p.println(exceptName.toString());
+                p.indentLeft();
+                p.println("</Exception>");
+                p.indentLeft();
+            }
+            p.println("</Throws>");
+        }
         if (body != null) {
             p.println("<Body>");
             p.indentRight();

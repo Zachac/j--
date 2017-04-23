@@ -317,7 +317,7 @@ public class Parser {
      */
 
     private boolean seeBasicType() {
-        if (see(BOOLEAN) || see(CHAR) || see(INT)) {
+        if (see(BOOLEAN) || see(CHAR) || see(INT) || see(LONG) || see(FLOAT) || see(DOUBLE)) {
             return true;
         } else {
             return false;
@@ -812,7 +812,7 @@ public class Parser {
         int line = scanner.token().line();
         JFormalParameter param = formalParameter();
         mustBe(COLON);
-        JExpression iterable = expression(); //TODO test if this could possibly be Iterable
+        JExpression iterable = expression();
         
         return new JEnhancedForExpression(line, param, iterable);
     }
@@ -846,14 +846,26 @@ public class Parser {
      */
 
     private ArrayList<JFormalParameter> formalParameters() {
-        ArrayList<JFormalParameter> parameters = new ArrayList<JFormalParameter>();
+        JFormalParamaters parameters = new JFormalParamaters();
+        ArrayList<TypeName> exceptions = new ArrayList<>();
         mustBe(LPAREN);
-        if (have(RPAREN))
-            return parameters; // ()
-        do {
-            parameters.add(formalParameter());
-        } while (have(COMMA));
-        mustBe(RPAREN);
+        
+        if (!have(RPAREN)) {
+            do {
+                parameters.add(formalParameter());
+            } while (have(COMMA));
+            mustBe(RPAREN);
+        }
+        
+        
+        if (have(THROWS)) {
+            do {
+                exceptions.add(qualifiedIdentifier());
+            } while (have(COMMA));
+        }
+        
+        parameters.setExceptions(exceptions);
+        
         
         return parameters;
     }
@@ -1064,6 +1076,12 @@ public class Parser {
             return Type.CHAR;
         } else if (have(INT)) {
             return Type.INT;
+        } else if (have(LONG)) {
+            return Type.LONG;
+        } else if (have(DOUBLE)) {
+            return Type.DOUBLE;
+        } else if (have(FLOAT)) {
+            return Type.FLOAT;
         } else {
             reportParserError("Type sought where %s found", scanner.token()
                     .image());
@@ -1238,10 +1256,10 @@ public class Parser {
     private JExpression conditionalAndExpression() {
         int line = scanner.token().line();
         boolean more = true;
-        JExpression lhs = equalityExpression();
+        JExpression lhs = bitwiseOrExpression();
         while (more) {
             if (have(LAND)) {
-                lhs = new JLogicalAndOp(line, lhs, equalityExpression());
+                lhs = new JLogicalAndOp(line, lhs, bitwiseOrExpression());
             } else {
                 more = false;
             }
