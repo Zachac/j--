@@ -1,35 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<JCompilationUnit line="1">
-  <Source fileName="tests/pass/SimpleHelloWorld.java"/>
+<JCompilationUnit line="3">
+  <Source fileName="tests/pass/HelloWorld.java"/>
+  <Package name="pass"/>
   <Imports>
     <Import name="java.lang.System"/>
   </Imports>
   <TypeDeclarations>
-    <JClassDeclaration line="3" name="SimpleHelloWorld" super="java.lang.Object">
+    <JClassDeclaration line="7" name="HelloWorld" super="java.lang.Object">
       <Modifiers>
         <Modifier name="public"/>
       </Modifiers>
       <ClassBlock>
-      <JMethodDeclaration line="4" name="main" returnType="void">
+      <JMethodDeclaration line="11" name="foo" returnType="void">
         <Modifiers>
           <Modifier name="public"/>
-          <Modifier name="static"/>
         </Modifiers>
         <FormalParameters>
-          <JFormalParameter line="4" name="args" type="String[]"/>
         </FormalParameters>
         <Body>
-          <JBlock line="4">
-            <JStatementExpression line="5">
-              <JBinaryExpression line="5" type="" operator="+">
-                <Lhs>
-                  <JLiteralInt line="5" type="" value="2"/>
-                </Lhs>
-                <Rhs>
-                  <JLiteralInt line="5" type="" value="2"/>
-                </Rhs>
-              </JBinaryExpression>
-            </JStatementExpression>
+          <JBlock line="11">
+            <JSwitchStatment line="12">
+              <ValueExpression>
+                <JLiteralInt line="12" type="" value="3"/>
+              </ValueExpression>
+                <JSwitchCases line="12">
+                </JSwitchCases>
+            </JSwitchStatment>
           </JBlock>
         </Body>
       </JMethodDeclaration>

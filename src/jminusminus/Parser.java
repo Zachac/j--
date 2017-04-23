@@ -267,6 +267,44 @@ public class Parser {
         scanner.returnToPosition();
         return true;
     }
+    
+    /**
+     * Are we looking at an enhanced for expression? ie.
+     * 
+     * <pre>
+     *       enhancedForExpression ::= formalParamater COLON expression
+     * </pre>
+     */
+    private boolean seeEnhancedForExpressionStart() {
+        scanner.recordPosition();
+        
+        if (seeBasicType()) {
+           scanner.next(); 
+        } else if (!have(IDENTIFIER)) {
+            scanner.returnToPosition();
+            return false;
+        }
+        
+        while (have(LBRACK)) {
+            if (!have(RBRACK)) {
+                scanner.returnToPosition();
+                return false;
+            }
+        }
+        
+        if (!have(IDENTIFIER)) {
+            scanner.returnToPosition();
+            return false;
+        }
+        
+        if (!have(COLON)) {
+            scanner.returnToPosition();
+            return false;
+        }
+       
+        scanner.returnToPosition();
+        return true;
+    }
 
     /**
      * Are we looking at a basic type? ie.
@@ -633,6 +671,10 @@ public class Parser {
      *   statement ::= block
      *               | IF parExpression statement [ELSE statement]
      *               | WHILE parExpression statement 
+     *               | FOR forExpression statement
+     *               | SWITCH switchBlock
+     *               | TRY statement CATCH parExpression statement [FINALLY statement]
+     *               | THROW expression SEMI
      *               | RETURN [expression] SEMI
      *               | SEMI 
      *               | statementExpression SEMI
@@ -654,6 +696,39 @@ public class Parser {
             JExpression test = parExpression();
             JStatement statement = statement();
             return new JWhileStatement(line, test, statement);
+        } else if (have(FOR)) {
+            JExpression forExpression = forExpression();
+            JStatement statement = statement();
+            return new JForStatement(line, forExpression, statement);
+        } else if (have(SWITCH)) {
+            JExpression expression = parExpression();
+            JSwitchBlock switchBlock = switchBlock();
+            return new JSwitchStatement(line, expression, switchBlock);
+        } else if (have(TRY)) {
+            JBlock attempt = block();
+            ArrayList<JCatch> catches = new ArrayList<>();
+            JBlock finish = null;
+            
+            while(have(CATCH)) {
+                int catchLine = scanner.token().line();
+                JExpression exception = parExpression();
+                JBlock caught = block();
+                catches.add(new JCatch(catchLine, exception, caught));
+            }
+            
+            if (catches.size() == 0) {
+                mustBe(FINALLY);
+                
+            } else if (have(FINALLY)) {
+                finish = block();
+            }
+            
+            return new JTryStatement(line, attempt, catches, finish);
+        } else if (have(THROW)) {
+            JExpression excpetion = expression();
+            mustBe(SEMI);
+            
+            return new JThrowStatement(line, excpetion);
         } else if (have(RETURN)) {
             if (have(SEMI)) {
                 return new JReturnStatement(line, null);
@@ -670,7 +745,93 @@ public class Parser {
             return statement;
         }
     }
+    
+    /**
+     * Parse a for expression.
+     * 
+     * <pre>
+     *      forExpression ::= RPAREN (simpleForExpression | enhancedForExpression) LPAREN
+     * </pre>
+     * 
+     * @return a for expression.
+     */
+    private JExpression forExpression() {
+        mustBe(LPAREN);
+        JExpression forExpression;
+        
+        if (seeEnhancedForExpressionStart()) {
+            forExpression = enhancedForExpression();
+        } else {
+            forExpression = simpleForExpression();            
+        }
+        
+        mustBe(RPAREN);
+        
+        return forExpression;
+    }
+    
+    /**
+     * Parse a simple for expression.
+     * 
+     * <pre>
+     *      simpleForExpression ::=     (statementExpression SEMI| localVariableDeclerator)
+                                        expression SEMI
+                                        statementExpression SEMI
+     * </pre>
+     * 
+     * @return a for expression.
+     */
+    private JExpression simpleForExpression() {
+        int line = scanner.token().line();
+        JStatement initializer;
+        if (seeLocalVariableDeclaration()) {
+            initializer = localVariableDeclarationStatement();
+        } else {
+            initializer = statementExpression();
+            mustBe(SEMI);
+        }
 
+        JExpression test = expression();
+        mustBe(SEMI);
+        JStatement update = statementExpression();
+        
+        JExpression simple = new JSimpleForExpression(line, initializer, test, update);
+        return simple;
+    }
+    
+    /**
+     * Parse an enhanced for expression.
+     * 
+     * <pre>
+     *      enhancedForExpression ::= type identifier COLON identifier
+     * </pre>
+     * 
+     * @return a for expression.
+     */
+    private JExpression enhancedForExpression() {
+        int line = scanner.token().line();
+        JFormalParameter param = formalParameter();
+        mustBe(COLON);
+        JExpression iterable = expression(); //TODO test if this could possibly be Iterable
+        
+        return new JEnhancedForExpression(line, param, iterable);
+    }
+
+    
+    private JSwitchBlock switchBlock() {
+        int line = scanner.token().line();
+        ArrayList<JSwitchCase> cases = new ArrayList<JSwitchCase>();
+        
+        mustBe(LCURLY);
+            while (have(DEFAULT) || have(CASE)) {
+                JStatement statement = statement();
+                cases.add(new JSwitchCase(scanner.token().line(), scanner.previousToken(), statement));
+            }
+        mustBe(RCURLY);
+        
+        return new JSwitchBlock(line, cases);
+    }
+    
     /**
      * Parse formal parameters.
      * 
@@ -693,6 +854,7 @@ public class Parser {
             parameters.add(formalParameter());
         } while (have(COMMA));
         mustBe(RPAREN);
+        
         return parameters;
     }
 
@@ -998,14 +1160,68 @@ public class Parser {
 
     private JExpression assignmentExpression() {
         int line = scanner.token().line();
-        JExpression lhs = conditionalAndExpression();
+        JExpression lhs = conditionalExpression();
         if (have(ASSIGN)) {
             return new JAssignOp(line, lhs, assignmentExpression());
         } else if (have(PLUS_ASSIGN)) {
             return new JPlusAssignOp(line, lhs, assignmentExpression());
+        } else if (have(MINUS_ASSIGN)) {
+            return new JMinusAssignOp(line, lhs, assignmentExpression());
+        } else if (have(STAR_ASSIGN)) {
+            return new JStarAssignOp(line, lhs, assignmentExpression());
+        } else if (have(DIV_ASSIGN)) {
+            return new JDivideAssignOp(line, lhs, assignmentExpression());
+        } else if (have(BSHL_ASSIGN)) {
+            return new JBitShiftLeftAssignOp(line, lhs, assignmentExpression());
+        } else if (have(BSHR_ASSIGN)) {
+            return new JBitShiftRightAssignOp(line, lhs, assignmentExpression());
+        } else if (have(BSHRUN_ASSIGN)) {
+            return new JBitShiftRightUnsignedAssignOp(line, lhs, assignmentExpression());
+        } else if (have(BWAND_ASSIGN)) {
+            return new JBitWiseAndAssignOp(line, lhs, assignmentExpression());
+        } else if (have(BWOR_ASSIGN)) {
+            return new JBitWiseOrAssignOp(line, lhs, assignmentExpression());
+        } else if (have(BWXOR_ASSIGN)) {
+            return new JBitWiseXOrAssignOp(line, lhs, assignmentExpression());
         } else {
             return lhs;
         }
+    }
+    
+    private JExpression conditionalExpression() {
+        int line = scanner.token().line();
+        boolean more = true;
+        JExpression lhs = conditionalOrExpression();
+        
+        while (more) {
+            if (have(QMARK)) {
+                JExpression output1 = conditionalExpression();
+                mustBe(COLON);
+                JExpression output2 = conditionalExpression();
+                
+                lhs = new JConditionalExpression(line, lhs, output1, output2);
+            } else {
+                more = false;
+            }
+        }
+        
+        return lhs;
+    }
+    
+    private JExpression conditionalOrExpression() {
+        int line = scanner.token().line();
+        boolean more = true;
+        JExpression lhs = conditionalAndExpression();
+        
+        while (more) {
+            if (have(QMARK)) {
+                lhs = new JConditionalOrExpression(line, lhs, conditionalAndExpression());
+            } else {
+                more = false;
+            }
+        }
+        
+        return lhs;
     }
 
     /**
@@ -1032,6 +1248,54 @@ public class Parser {
         }
         return lhs;
     }
+    
+    private JExpression bitwiseOrExpression() {
+        int line = scanner.token().line();
+        boolean more = true;
+        JExpression lhs = bitwiseXOrExpression();
+        
+        while (more) {
+            if (have(BWOR)) {
+                lhs = new JBitwiseOrExpression(line, lhs, bitwiseXOrExpression());
+            } else {
+                more = false;
+            }
+        }
+        
+        return lhs;
+    }
+    
+    private JExpression bitwiseXOrExpression() {
+        int line = scanner.token().line();
+        boolean more = true;
+        JExpression lhs = bitwiseAndExpression();
+        
+        while (more) {
+            if (have(BWXOR)) {
+                lhs = new JBitwiseXOrExpression(line, lhs, bitwiseAndExpression());
+            } else {
+                more = false;
+            }
+        }
+        
+        return lhs;
+    }
+    
+    private JExpression bitwiseAndExpression() {
+        int line = scanner.token().line();
+        boolean more = true;
+        JExpression lhs = equalityExpression();
+        
+        while (more) {
+            if (have(BWAND)) {
+                lhs = new JBitwiseAndExpression(line, lhs, equalityExpression());
+            } else {
+                more = false;
+            }
+        }
+        
+        return lhs;
+    }
 
     /**
      * Parse an equality expression.
@@ -1051,6 +1315,8 @@ public class Parser {
         while (more) {
             if (have(EQUAL)) {
                 lhs = new JEqualOp(line, lhs, relationalExpression());
+            } else if (have(NOTEQUAL)) {
+                lhs = new JNotEqualOp(line, lhs, relationalExpression());
             } else {
                 more = false;
             }
@@ -1072,11 +1338,15 @@ public class Parser {
 
     private JExpression relationalExpression() {
         int line = scanner.token().line();
-        JExpression lhs = additiveExpression();
+        JExpression lhs = shiftExpression();
         if (have(GT)) {
-            return new JGreaterThanOp(line, lhs, additiveExpression());
+            return new JGreaterThanOp(line, lhs, shiftExpression());
+        } else if (have(GTEQ)) {
+            return new JGreaterThanEqOp(line, lhs, shiftExpression());
+        } else if (have(LT)) {
+            return new JLessThanOp(line, lhs, shiftExpression());
         } else if (have(LE)) {
-            return new JLessEqualOp(line, lhs, additiveExpression());
+            return new JLessEqualOp(line, lhs, shiftExpression());
         } else if (have(INSTANCEOF)) {
             return new JInstanceOfOp(line, lhs, referenceType());
         } else {
@@ -1084,6 +1354,20 @@ public class Parser {
         }
     }
 
+    private JExpression shiftExpression() {
+        int line = scanner.token().line();
+        JExpression lhs = additiveExpression();
+        if (have(BSHR)) {
+            return new JBitShiftRight(line, lhs, additiveExpression());
+        } else if (have(BSHL)) {
+            return new JBitShiftLeft(line, lhs, additiveExpression());
+        } else if (have(BSHRUN)) {
+            return new JBitShiftRightUnsigned(line, lhs, additiveExpression());
+        } else {
+            return lhs;
+        }
+    }
+    
     /**
      * Parse an additive expression.
      * 
@@ -1129,6 +1413,10 @@ public class Parser {
         while (more) {
             if (have(STAR)) {
                 lhs = new JMultiplyOp(line, lhs, unaryExpression());
+            } else if (have(DIV)) {
+                lhs = new JDivideOp(line, lhs, unaryExpression());
+            } else if (have(MOD)) {
+                lhs = new JModuloOp(line, lhs, unaryExpression());
             } else {
                 more = false;
             }
@@ -1154,6 +1442,8 @@ public class Parser {
             return new JPreIncrementOp(line, unaryExpression());
         } else if (have(MINUS)) {
             return new JNegateOp(line, unaryExpression());
+        } else if (have(BWNOT)) {
+            return new JBitwiseNotOp(line, unaryExpression());
         } else {
             return simpleUnaryExpression();
         }
