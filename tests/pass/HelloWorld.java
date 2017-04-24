@@ -5,24 +5,13 @@ package pass;
 import java.lang.System;
 
 public class HelloWorld {
-	
-	/* This shouls also be fine. */
 
-  public void foo() {
-    switch(3) {
-      case 2:
-      
-      default:
-      
-      case 3:
+    public static String message() {
+        return "Hello, World!";
     }
-  }
+
+    public static void main(String[] args) {
+        System.out.println(HelloWorld.message());
+    }
 
 }
-
-
-
-/* This Should not Appear 
- * 
- * alright?  */
-

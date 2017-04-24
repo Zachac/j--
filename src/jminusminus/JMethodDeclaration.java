@@ -244,9 +244,9 @@ class JMethodDeclaration
             }
             p.println("</FormalParameters>");
         }
-        if (params instanceof JFromalParamaters && ((JFromalParamaters) params).getExceptions() != null) {
+        if (params instanceof JFormalParamaters && ((JFormalParamaters) params).getExceptions() != null) {
             p.println("<Throws>");
-            for (TypeName exceptName : ((JFromalParamaters) params).getExceptions()) {
+            for (TypeName exceptName : ((JFormalParamaters) params).getExceptions()) {
                 p.indentRight();
                 p.println("<Exception>");
                 p.indentRight();

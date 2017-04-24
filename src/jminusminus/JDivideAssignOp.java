@@ -3,7 +3,7 @@ package jminusminus;
 public class JDivideAssignOp extends JAssignment {
 
     public JDivideAssignOp(int line, JExpression lhs, JExpression rhs) {
-        super(line, "+=", lhs, rhs);
+        super(line, "/=", lhs, rhs);
     }
 
     @Override

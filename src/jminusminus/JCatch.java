@@ -2,10 +2,10 @@ package jminusminus;
 
 public class JCatch extends JAST {
 
-    private JExpression excpetion;
+    private JFormalParameter excpetion;
     private JBlock caught;
 
-    public JCatch(int catchLine, JExpression exception, JBlock caught) {
+    public JCatch(int catchLine, JFormalParameter exception, JBlock caught) {
         super(catchLine);
         
         this.excpetion = exception;
@@ -30,20 +30,20 @@ public class JCatch extends JAST {
         p.printf("<JCatch line=\"%d\">\n", line());
         p.indentRight();
         
-        p.print("<Exception>");
+        p.println("<Exception>");
         p.indentRight();
         excpetion.writeToStdOut(p);
         p.indentLeft();
-        p.print("</Exception>");
+        p.println("</Exception>");
         
-        p.print("<Catch>");
+        p.println("<Catch>");
         p.indentRight();
         caught.writeToStdOut(p);
         p.indentLeft();
-        p.print("</Catch>");
+        p.println("</Catch>");
         
         p.indentLeft();
-        p.printf("</JTryStatement>\n");
+        p.println("</JTryStatement>");
     }
 
 }

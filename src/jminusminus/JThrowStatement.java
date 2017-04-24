@@ -27,14 +27,14 @@ public class JThrowStatement extends JStatement {
         p.printf("<JCatch line=\"%d\">\n", line());
         p.indentRight();
         
-        p.print("<Exception>");
+        p.println("<Exception>");
         p.indentRight();
         exception.writeToStdOut(p);
         p.indentLeft();
-        p.print("</Exception>");
+        p.println("</Exception>");
         
         p.indentLeft();
-        p.printf("</JTryStatement>\n");
+        p.println("</JTryStatement>");
     }
 
 }

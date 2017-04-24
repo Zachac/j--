@@ -3,7 +3,7 @@ package jminusminus;
 public class JLessThanOp extends JAssignment {
 
     public JLessThanOp(int line, JExpression lhs, JExpression rhs) {
-        super(line, "+=", lhs, rhs);
+        super(line, "<", lhs, rhs);
     }
 
     @Override

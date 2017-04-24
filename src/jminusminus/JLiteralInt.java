@@ -38,6 +38,7 @@ class JLiteralInt extends JExpression {
 
     public JExpression analyze(Context context) {
         type = Type.INT;
+        
         return this;
     }
 

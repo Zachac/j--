@@ -1,31 +1,650 @@
 <?xml version="1.0" encoding="utf-8"?>
 <JCompilationUnit line="3">
-  <Source fileName="tests/pass/HelloWorld.java"/>
-  <Package name="pass"/>
+  <Source fileName="SimpleTests.java"/>
   <Imports>
-    <Import name="java.lang.System"/>
   </Imports>
   <TypeDeclarations>
-    <JClassDeclaration line="7" name="HelloWorld" super="java.lang.Object">
+    <JClassDeclaration line="3" name="SimpleTests" super="java.lang.Object">
       <Modifiers>
         <Modifier name="public"/>
       </Modifiers>
       <ClassBlock>
-      <JMethodDeclaration line="11" name="foo" returnType="void">
+      <JMethodDeclaration line="4" name="literaltest" returnType="void">
         <Modifiers>
           <Modifier name="public"/>
         </Modifiers>
         <FormalParameters>
         </FormalParameters>
+        <Throws>
+        </Throws>
         <Body>
-          <JBlock line="11">
-            <JSwitchStatment line="12">
-              <ValueExpression>
-                <JLiteralInt line="12" type="" value="3"/>
-              </ValueExpression>
-                <JSwitchCases line="12">
-                </JSwitchCases>
-            </JSwitchStatment>
+          <JBlock line="4">
+            <JVariableDeclaration>
+              <Modifiers>
+              </Modifiers>
+              <VariableDeclarators>
+                <JVariableDeclarator line="5" name="i" type="int">
+                </JVariableDeclarator>
+              </VariableDeclarators>
+            </JVariableDeclaration>
+            <JVariableDeclaration>
+              <Modifiers>
+              </Modifiers>
+              <VariableDeclarators>
+                <JVariableDeclarator line="6" name="d" type="long">
+                </JVariableDeclarator>
+              </VariableDeclarators>
+            </JVariableDeclaration>
+            <JVariableDeclaration>
+              <Modifiers>
+              </Modifiers>
+              <VariableDeclarators>
+                <JVariableDeclarator line="7" name="f" type="long">
+                </JVariableDeclarator>
+              </VariableDeclarators>
+            </JVariableDeclaration>
+            <JVariableDeclaration>
+              <Modifiers>
+              </Modifiers>
+              <VariableDeclarators>
+                <JVariableDeclarator line="8" name="g" type="long">
+                </JVariableDeclarator>
+              </VariableDeclarators>
+            </JVariableDeclaration>
+            <JStatementExpression line="10">
+              <JBinaryExpression line="10" type="" operator="=">
+                <Lhs>
+                  <JVariable name="i"/>
+                </Lhs>
+                <Rhs>
+                  <JLiteralInt line="10" type="" value="3"/>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="11">
+              <JBinaryExpression line="11" type="" operator="=">
+                <Lhs>
+                  <JVariable name="d"/>
+                </Lhs>
+                <Rhs>
+                  <JLiteralDouble line="11" type="" value="0.0"/>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="12">
+              <JBinaryExpression line="12" type="" operator="=">
+                <Lhs>
+                  <JVariable name="f"/>
+                </Lhs>
+                <Rhs>
+                  <JLiteralFloat line="12" type="" value="0.0"/>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="13">
+              <JBinaryExpression line="13" type="" operator="=">
+                <Lhs>
+                  <JVariable name="g"/>
+                </Lhs>
+                <Rhs>
+                  <JLiteralLong line="13" type="" value="2333"/>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+          </JBlock>
+        </Body>
+      </JMethodDeclaration>
+      <JMethodDeclaration line="17" name="operatorTests" returnType="String">
+        <Modifiers>
+          <Modifier name="public"/>
+        </Modifiers>
+        <FormalParameters>
+        </FormalParameters>
+        <Throws>
+          <Exception>
+            Exception
+          </Exception>
+          <Exception>
+            IOException
+          </Exception>
+          <Exception>
+            FileNotFoundException
+          </Exception>
+        </Throws>
+        <Body>
+          <JBlock line="17">
+            <JVariableDeclaration>
+              <Modifiers>
+              </Modifiers>
+              <VariableDeclarators>
+                <JVariableDeclarator line="18" name="j" type="int">
+                  <Initializer>
+                    <JBinaryExpression line="18" type="" operator="-">
+                      <Lhs>
+                        <JBinaryExpression line="18" type="" operator="+">
+                          <Lhs>
+                            <JLiteralInt line="18" type="" value="3"/>
+                          </Lhs>
+                          <Rhs>
+                            <JLiteralInt line="18" type="" value="3"/>
+                          </Rhs>
+                        </JBinaryExpression>
+                      </Lhs>
+                      <Rhs>
+                        <JBinaryExpression line="18" type="" operator="%">
+                          <Lhs>
+                            <JBinaryExpression line="18" type="" operator="/=">
+                              <Lhs>
+                                <JBinaryExpression line="18" type="" operator="*">
+                                  <Lhs>
+                                    <JLiteralInt line="18" type="" value="2"/>
+                                  </Lhs>
+                                  <Rhs>
+                                    <JLiteralInt line="18" type="" value="5"/>
+                                  </Rhs>
+                                </JBinaryExpression>
+                              </Lhs>
+                              <Rhs>
+                                <JLiteralInt line="18" type="" value="1"/>
+                              </Rhs>
+                            </JBinaryExpression>
+                          </Lhs>
+                          <Rhs>
+                            <JLiteralInt line="18" type="" value="2"/>
+                          </Rhs>
+                        </JBinaryExpression>
+                      </Rhs>
+                    </JBinaryExpression>
+                  </Initializer>
+                </JVariableDeclarator>
+              </VariableDeclarators>
+            </JVariableDeclaration>
+            <JStatementExpression line="19">
+              <JUnaryExpression line="19" type="" operator="post++">
+                <Operand>
+                  <JUnaryExpression line="19" type="" operator="post--">
+                    <Operand>
+                      <JVariable name="j"/>
+                    </Operand>
+                  </JUnaryExpression>
+                </Operand>
+              </JUnaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="20">
+              <JUnaryExpression line="20" type="" operator="post++">
+                <Operand>
+                  <JUnaryExpression line="20" type="" operator="post++">
+                    <Operand>
+                      <JVariable name="j"/>
+                    </Operand>
+                  </JUnaryExpression>
+                </Operand>
+              </JUnaryExpression>
+            </JStatementExpression>
+            <JVariableDeclaration>
+              <Modifiers>
+              </Modifiers>
+              <VariableDeclarators>
+                <JVariableDeclarator line="22" name="f" type="boolean">
+                  <Initializer>
+                    <JUnaryExpression line="22" type="" operator="!">
+                      <Operand>
+                        <JLiteralTrue line="22" type=""/>
+                      </Operand>
+                    </JUnaryExpression>
+                  </Initializer>
+                </JVariableDeclarator>
+              </VariableDeclarators>
+            </JVariableDeclaration>
+            <JIfStatement line="24">
+              <TestExpression>
+                <JBinaryExpression line="24" type="" operator="==">
+                  <Lhs>
+                    <JVariable name="j"/>
+                  </Lhs>
+                  <Rhs>
+                    <JLiteralInt line="24" type="" value="3"/>
+                  </Rhs>
+                </JBinaryExpression>
+              </TestExpression>
+              <ThenClause>
+                <JEmptyStatement line="24"/>
+              </ThenClause>
+            </JIfStatement>
+            <JIfStatement line="25">
+              <TestExpression>
+                <JBinaryExpression line="25" type="" operator="!=">
+                  <Lhs>
+                    <JVariable name="j"/>
+                  </Lhs>
+                  <Rhs>
+                    <JLiteralInt line="25" type="" value="3"/>
+                  </Rhs>
+                </JBinaryExpression>
+              </TestExpression>
+              <ThenClause>
+                <JEmptyStatement line="25"/>
+              </ThenClause>
+            </JIfStatement>
+            <JIfStatement line="26">
+              <TestExpression>
+                <JBinaryExpression line="26" type="" operator="&gt;">
+                  <Lhs>
+                    <JVariable name="j"/>
+                  </Lhs>
+                  <Rhs>
+                    <JLiteralInt line="26" type="" value="3"/>
+                  </Rhs>
+                </JBinaryExpression>
+              </TestExpression>
+              <ThenClause>
+                <JEmptyStatement line="26"/>
+              </ThenClause>
+            </JIfStatement>
+            <JIfStatement line="27">
+              <TestExpression>
+                <JBinaryExpression line="27" type="" operator="&lt;">
+                  <Lhs>
+                    <JVariable name="j"/>
+                  </Lhs>
+                  <Rhs>
+                    <JLiteralInt line="27" type="" value="3"/>
+                  </Rhs>
+                </JBinaryExpression>
+              </TestExpression>
+              <ThenClause>
+                <JEmptyStatement line="27"/>
+              </ThenClause>
+            </JIfStatement>
+            <JIfStatement line="28">
+              <TestExpression>
+                <JBinaryExpression line="28" type="" operator="&gt;=">
+                  <Lhs>
+                    <JVariable name="j"/>
+                  </Lhs>
+                  <Rhs>
+                    <JLiteralInt line="28" type="" value="3"/>
+                  </Rhs>
+                </JBinaryExpression>
+              </TestExpression>
+              <ThenClause>
+                <JEmptyStatement line="28"/>
+              </ThenClause>
+            </JIfStatement>
+            <JIfStatement line="29">
+              <TestExpression>
+                <JBinaryExpression line="29" type="" operator="&lt;=">
+                  <Lhs>
+                    <JVariable name="j"/>
+                  </Lhs>
+                  <Rhs>
+                    <JLiteralInt line="29" type="" value="3"/>
+                  </Rhs>
+                </JBinaryExpression>
+              </TestExpression>
+              <ThenClause>
+                <JEmptyStatement line="29"/>
+              </ThenClause>
+            </JIfStatement>
+            <JStatementExpression line="31">
+              <JBinaryExpression line="31" type="" operator="=">
+                <Lhs>
+                  <JVariable name="j"/>
+                </Lhs>
+                <Rhs>
+                  <JUnaryExpression line="31" type="" operator="~">
+                    <Operand>
+                      <JVariable name="j"/>
+                    </Operand>
+                  </JUnaryExpression>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="32">
+              <JBinaryExpression line="32" type="" operator="=">
+                <Lhs>
+                  <JVariable name="j"/>
+                </Lhs>
+                <Rhs>
+                  <JBinaryExpression line="32" type="" operator="&lt;&lt;">
+                    <Lhs>
+                      <JLiteralInt line="32" type="" value="3"/>
+                    </Lhs>
+                    <Rhs>
+                      <JLiteralInt line="32" type="" value="1"/>
+                    </Rhs>
+                  </JBinaryExpression>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="33">
+              <JBinaryExpression line="33" type="" operator="=">
+                <Lhs>
+                  <JVariable name="j"/>
+                </Lhs>
+                <Rhs>
+                  <JBinaryExpression line="33" type="" operator="&gt;&gt;">
+                    <Lhs>
+                      <JLiteralInt line="33" type="" value="256"/>
+                    </Lhs>
+                    <Rhs>
+                      <JLiteralInt line="33" type="" value="2"/>
+                    </Rhs>
+                  </JBinaryExpression>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="34">
+              <JBinaryExpression line="34" type="" operator="=">
+                <Lhs>
+                  <JVariable name="j"/>
+                </Lhs>
+                <Rhs>
+                  <JBinaryExpression line="34" type="" operator="&gt;&gt;&gt;">
+                    <Lhs>
+                      <JLiteralInt line="34" type="" value="256"/>
+                    </Lhs>
+                    <Rhs>
+                      <JLiteralInt line="34" type="" value="2"/>
+                    </Rhs>
+                  </JBinaryExpression>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="35">
+              <JBinaryExpression line="35" type="" operator="=">
+                <Lhs>
+                  <JVariable name="j"/>
+                </Lhs>
+                <Rhs>
+                  <JBinaryExpression line="35" type="" operator="&amp;">
+                    <Lhs>
+                      <JVariable name="j"/>
+                    </Lhs>
+                    <Rhs>
+                      <JVariable name="j"/>
+                    </Rhs>
+                  </JBinaryExpression>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="36">
+              <JBinaryExpression line="36" type="" operator="=">
+                <Lhs>
+                  <JVariable name="j"/>
+                </Lhs>
+                <Rhs>
+                  <JBinaryExpression line="36" type="" operator="^">
+                    <Lhs>
+                      <JVariable name="j"/>
+                    </Lhs>
+                    <Rhs>
+                      <JVariable name="j"/>
+                    </Rhs>
+                  </JBinaryExpression>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="37">
+              <JBinaryExpression line="37" type="" operator="=">
+                <Lhs>
+                  <JVariable name="j"/>
+                </Lhs>
+                <Rhs>
+                  <JBinaryExpression line="37" type="" operator="|">
+                    <Lhs>
+                      <JVariable name="j"/>
+                    </Lhs>
+                    <Rhs>
+                      <JLiteralInt line="37" type="" value="1"/>
+                    </Rhs>
+                  </JBinaryExpression>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="40">
+              <JBinaryExpression line="40" type="" operator="+=">
+                <Lhs>
+                  <JVariable name="j"/>
+                </Lhs>
+                <Rhs>
+                  <JLiteralInt line="40" type="" value="2"/>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="41">
+              <JBinaryExpression line="41" type="" operator="-=">
+                <Lhs>
+                  <JVariable name="j"/>
+                </Lhs>
+                <Rhs>
+                  <JLiteralInt line="41" type="" value="5"/>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="42">
+              <JBinaryExpression line="42" type="" operator="*=">
+                <Lhs>
+                  <JVariable name="j"/>
+                </Lhs>
+                <Rhs>
+                  <JLiteralInt line="42" type="" value="3"/>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="43">
+              <JBinaryExpression line="43" type="" operator="/=">
+                <Lhs>
+                  <JVariable name="j"/>
+                </Lhs>
+                <Rhs>
+                  <JLiteralInt line="43" type="" value="6"/>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="44">
+              <JBinaryExpression line="44" type="" operator="%=">
+                <Lhs>
+                  <JVariable name="j"/>
+                </Lhs>
+                <Rhs>
+                  <JLiteralInt line="44" type="" value="2"/>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="45">
+              <JBinaryExpression line="45" type="" operator="&amp;=">
+                <Lhs>
+                  <JVariable name="j"/>
+                </Lhs>
+                <Rhs>
+                  <JLiteralInt line="45" type="" value="1"/>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="46">
+              <JBinaryExpression line="46" type="" operator="^=">
+                <Lhs>
+                  <JVariable name="j"/>
+                </Lhs>
+                <Rhs>
+                  <JLiteralInt line="46" type="" value="2"/>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="47">
+              <JBinaryExpression line="47" type="" operator="|=">
+                <Lhs>
+                  <JVariable name="j"/>
+                </Lhs>
+                <Rhs>
+                  <JLiteralInt line="47" type="" value="3"/>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="48">
+              <JBinaryExpression line="48" type="" operator="&lt;&lt;=">
+                <Lhs>
+                  <JVariable name="j"/>
+                </Lhs>
+                <Rhs>
+                  <JLiteralInt line="48" type="" value="2"/>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="49">
+              <JBinaryExpression line="49" type="" operator="&gt;&gt;=">
+                <Lhs>
+                  <JVariable name="j"/>
+                </Lhs>
+                <Rhs>
+                  <JLiteralInt line="49" type="" value="1"/>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+            <JStatementExpression line="50">
+              <JBinaryExpression line="50" type="" operator="&gt;&gt;&gt;=">
+                <Lhs>
+                  <JVariable name="j"/>
+                </Lhs>
+                <Rhs>
+                  <JLiteralInt line="50" type="" value="5"/>
+                </Rhs>
+              </JBinaryExpression>
+            </JStatementExpression>
+          </JBlock>
+        </Body>
+      </JMethodDeclaration>
+      <JMethodDeclaration line="54" name="logicalExpressionTests" returnType="String">
+        <Modifiers>
+          <Modifier name="public"/>
+        </Modifiers>
+        <FormalParameters>
+        </FormalParameters>
+        <Throws>
+          <Exception>
+            Exception
+          </Exception>
+          <Exception>
+            IOException
+          </Exception>
+          <Exception>
+            FileNotFoundException
+          </Exception>
+        </Throws>
+        <Body>
+          <JBlock line="54">
+            <JIfStatement line="55">
+              <TestExpression>
+                <JBinaryExpression line="55" type="" operator="&amp;&amp;">
+                  <Lhs>
+                    <JLiteralTrue line="55" type=""/>
+                  </Lhs>
+                  <Rhs>
+                    <JLiteralFalse line="55" type=""/>
+                  </Rhs>
+                </JBinaryExpression>
+              </TestExpression>
+              <ThenClause>
+                <JEmptyStatement line="55"/>
+              </ThenClause>
+            </JIfStatement>
+            <JIfStatement line="56">
+              <TestExpression>
+                <JBinaryExpression line="56" type="" operator="||">
+                  <Lhs>
+                    <JLiteralTrue line="56" type=""/>
+                  </Lhs>
+                  <Rhs>
+                    <JLiteralFalse line="56" type=""/>
+                  </Rhs>
+                </JBinaryExpression>
+              </TestExpression>
+              <ThenClause>
+                <JEmptyStatement line="56"/>
+              </ThenClause>
+            </JIfStatement>
+            <JIfStatement line="57">
+              <TestExpression>
+                <JBinaryExpression line="57" type="" operator="&amp;&amp;">
+                  <Lhs>
+                    <JBinaryExpression line="57" type="" operator="&amp;&amp;">
+                      <Lhs>
+                        <JLiteralTrue line="57" type=""/>
+                      </Lhs>
+                      <Rhs>
+                        <JLiteralTrue line="57" type=""/>
+                      </Rhs>
+                    </JBinaryExpression>
+                  </Lhs>
+                  <Rhs>
+                    <JLiteralTrue line="57" type=""/>
+                  </Rhs>
+                </JBinaryExpression>
+              </TestExpression>
+              <ThenClause>
+                <JEmptyStatement line="57"/>
+              </ThenClause>
+            </JIfStatement>
+            <JIfStatement line="58">
+              <TestExpression>
+                <JBinaryExpression line="58" type="" operator="&amp;&amp;">
+                  <Lhs>
+                    <JBinaryExpression line="58" type="" operator="&amp;&amp;">
+                      <Lhs>
+                        <JLiteralTrue line="58" type=""/>
+                      </Lhs>
+                      <Rhs>
+                        <JLiteralFalse line="58" type=""/>
+                      </Rhs>
+                    </JBinaryExpression>
+                  </Lhs>
+                  <Rhs>
+                    <JLiteralTrue line="58" type=""/>
+                  </Rhs>
+                </JBinaryExpression>
+              </TestExpression>
+              <ThenClause>
+                <JEmptyStatement line="58"/>
+              </ThenClause>
+            </JIfStatement>
+            <JIfStatement line="59">
+              <TestExpression>
+                <JBinaryExpression line="59" type="" operator="||">
+                  <Lhs>
+                    <JBinaryExpression line="59" type="" operator="&amp;&amp;">
+                      <Lhs>
+                        <JLiteralTrue line="59" type=""/>
+                      </Lhs>
+                      <Rhs>
+                        <JLiteralFalse line="59" type=""/>
+                      </Rhs>
+                    </JBinaryExpression>
+                  </Lhs>
+                  <Rhs>
+                    <JLiteralTrue line="59" type=""/>
+                  </Rhs>
+                </JBinaryExpression>
+              </TestExpression>
+              <ThenClause>
+                <JEmptyStatement line="59"/>
+              </ThenClause>
+            </JIfStatement>
+            <JIfStatement line="60">
+              <TestExpression>
+                <JBinaryExpression line="60" type="" operator="&amp;&amp;">
+                  <Lhs>
+                    <JLiteralTrue line="60" type=""/>
+                  </Lhs>
+                  <Rhs>
+                    <JLiteralFalse line="60" type=""/>
+                  </Rhs>
+                </JBinaryExpression>
+              </TestExpression>
+              <ThenClause>
+                <JEmptyStatement line="60"/>
+              </ThenClause>
+            </JIfStatement>
           </JBlock>
         </Body>
       </JMethodDeclaration>

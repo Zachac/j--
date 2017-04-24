@@ -196,7 +196,7 @@ class JPostDecrementOp extends JUnaryExpression {
      */
 
     public JPostDecrementOp(int line, JExpression arg) {
-        super(line, "post--", arg);
+        super(line, "post++", arg);
     }
 
     /**

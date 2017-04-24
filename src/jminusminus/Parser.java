@@ -711,14 +711,20 @@ public class Parser {
             
             while(have(CATCH)) {
                 int catchLine = scanner.token().line();
-                JExpression exception = parExpression();
+                mustBe(LPAREN);
+                
+                TypeName type = qualifiedIdentifier();
+                mustBe(IDENTIFIER);
+                String name = scanner.previousToken().image();
+                
+                JFormalParameter exception = new JFormalParameter(line, name, type); // TODO 
+                mustBe(RPAREN);
                 JBlock caught = block();
                 catches.add(new JCatch(catchLine, exception, caught));
             }
             
             if (catches.size() == 0) {
                 mustBe(FINALLY);
-                
             } else if (have(FINALLY)) {
                 finish = block();
             }
@@ -1134,6 +1140,8 @@ public class Parser {
         JExpression expr = expression();
         if (expr instanceof JAssignment || expr instanceof JPreIncrementOp
                 || expr instanceof JPostDecrementOp
+                || expr instanceof JPreDecrementOp
+                || expr instanceof JPostIncrementOp
                 || expr instanceof JMessageExpression
                 || expr instanceof JSuperConstruction
                 || expr instanceof JThisConstruction || expr instanceof JNewOp
@@ -1191,6 +1199,8 @@ public class Parser {
             return new JDivideAssignOp(line, lhs, assignmentExpression());
         } else if (have(BSHL_ASSIGN)) {
             return new JBitShiftLeftAssignOp(line, lhs, assignmentExpression());
+        } else if (have(MOD_ASSIGN)) {
+        	return new JModuloAssign(line, lhs, assignmentExpression());
         } else if (have(BSHR_ASSIGN)) {
             return new JBitShiftRightAssignOp(line, lhs, assignmentExpression());
         } else if (have(BSHRUN_ASSIGN)) {
@@ -1232,7 +1242,7 @@ public class Parser {
         JExpression lhs = conditionalAndExpression();
         
         while (more) {
-            if (have(QMARK)) {
+            if (have(LOR)) {
                 lhs = new JConditionalOrExpression(line, lhs, conditionalAndExpression());
             } else {
                 more = false;
@@ -1462,6 +1472,8 @@ public class Parser {
             return new JNegateOp(line, unaryExpression());
         } else if (have(BWNOT)) {
             return new JBitwiseNotOp(line, unaryExpression());
+        } else if (have(DEC)) {
+            return new JPreDecrementOp(line, unaryExpression());
         } else {
             return simpleUnaryExpression();
         }
@@ -1516,7 +1528,14 @@ public class Parser {
         while (see(DOT) || see(LBRACK)) {
             primaryExpr = selector(primaryExpr);
         }
-        while (have(DEC)) {
+        
+        
+        while (see(DEC) | see(INC)) {
+        	if (have(DEC)) {
+                primaryExpr = new JPostDecrementOp(line, primaryExpr);
+        	} else if (have(INC)) {
+                primaryExpr = new JPostIncrementOp(line, primaryExpr);
+        	}
             primaryExpr = new JPostDecrementOp(line, primaryExpr);
         }
         return primaryExpr;
@@ -1719,6 +1738,12 @@ public class Parser {
             return new JLiteralFalse(line);
         } else if (have(NULL)) {
             return new JLiteralNull(line);
+        } else if (have(FLOAT_LITERAL)) {
+        	return new JLiteralFloat(line, scanner.previousToken().image());
+        } else if (have(DOUBLE_LITERAL)) {
+        	return new JLiteralDouble(line, scanner.previousToken().image());
+        } else if (have(LONG_LITERAL)) {
+        	return new JLiteralLong(line, scanner.previousToken().image());
         } else {
             reportParserError("Literal sought where %s found", scanner.token()
                     .image());

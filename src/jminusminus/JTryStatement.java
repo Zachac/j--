@@ -34,25 +34,26 @@ public class JTryStatement extends JStatement {
         
         p.indentRight();
         
-        p.print("<Try>");
+        p.println("<Try>");
         p.indentRight();
         attempt.writeToStdOut(p);
         p.indentLeft();
-        p.print("</Try>");
+        p.println("</Try>");
 
         
         for (JCatch c : catches) {
             c.writeToStdOut(p);
         }
 
-        p.print("<Finally>");
-        p.indentRight();
-        finish.writeToStdOut(p);
+        if (finish != null) {
+        	p.println("<Finally>");
+        	p.indentRight();
+        	finish.writeToStdOut(p);
+        	p.indentLeft();
+        	p.println("</Finally>");        	
+        }
         p.indentLeft();
-        p.print("</Finally>");
-        
-        p.indentLeft();
-        p.printf("</JTryStatement>\n");
+        p.println("</JTryStatement>");
     }
 
 }

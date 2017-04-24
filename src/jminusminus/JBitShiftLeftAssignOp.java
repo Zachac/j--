@@ -3,7 +3,7 @@ package jminusminus;
 public class JBitShiftLeftAssignOp extends JAssignment {
 
     public JBitShiftLeftAssignOp(int line, JExpression lhs, JExpression rhs) {
-        super(line, "+=", lhs, rhs);
+        super(line, "<<=", lhs, rhs);
     }
 
     @Override

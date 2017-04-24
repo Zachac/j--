@@ -3,7 +3,7 @@ package jminusminus;
 public class JBitWiseXOrAssignOp extends JAssignment {
 
     public JBitWiseXOrAssignOp(int line, JExpression lhs, JExpression rhs) {
-        super(line, "+=", lhs, rhs);
+        super(line, "^=", lhs, rhs);
     }
 
     @Override

@@ -3,7 +3,7 @@
 public class JBitWiseOrAssignOp extends JAssignment {
 
     public JBitWiseOrAssignOp(int line, JExpression lhs, JExpression rhs) {
-        super(line, "+=", lhs, rhs);
+        super(line, "|=", lhs, rhs);
     }
 
     @Override
