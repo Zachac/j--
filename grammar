@@ -33,28 +33,26 @@ statement ::= block
             | WHILE parExpression statement 
             | FOR forExpression statement
             | SWITCH switchBlock
-            | TRY statement CATCH parExpression statement [FINALLY statement]
+            | TRY statement {catchStatement} (FINALLY statement | catchStatement)
             | THROW expression SEMI
             | RETURN [expression] SEMI
             | SEMI 
             | statementExpression SEMI
 
-forExpression ::= simpleForExpression | enhancedForExpression
+forExpression ::= RPAREN (simpleForExpression | enhancedForExpression) LPAREN
 
-simpleForExpression ::= RPAREN
-                            statementExpression SEMI
+simpleForExpression ::=     (statementExpression SEMI| localVariableDeclerator)
                             expression SEMI
                             statementExpression SEMI
-                        LPAREN
                         
-enhancedForExpression ::= RPAREN
-                            type identifier COLON identifier
-                          LPAREN
+enhancedForExpression ::= formalParamater COLON expression
             
 switchBlock ::= RPAREN
                     {CASE COLON {blockStatement}}
                     [DEFAULT COLON {blockStatement}]
                 LCURLY
+                
+catchStatement ::= CATCH parExpression block
             
 formalParameters ::= LPAREN 
                        [formalParameter {COMMA formalParameter}]

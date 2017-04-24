@@ -7,16 +7,16 @@ import java.lang.System;
 public class HelloWorld {
 	
 	/* This shouls also be fine. */
-	
-    public static String message() {
-    	int apple = 2 + 2;
-    	
-        return "Hello, World!";
-    }
 
-    public static void main(String[] args) {
-        System.out.println(HelloWorld.message());
+  public void foo() {
+    switch(3) {
+      case 2:
+      
+      default:
+      
+      case 3:
     }
+  }
 
 }
 
