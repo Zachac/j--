@@ -35,6 +35,7 @@ statement ::= block
             | SWITCH switchBlock
             | TRY statement {catchStatement} (FINALLY statement | catchStatement)
             | THROW expression SEMI
+            | DO statement UNTIL parExpression SEMI
             | RETURN [expression] SEMI
             | SEMI 
             | statementExpression SEMI

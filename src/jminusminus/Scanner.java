@@ -112,6 +112,7 @@ class Scanner {
         reserved.put(VOID.image(), VOID);
         reserved.put(VOLATILE.image(), VOLATILE);
         reserved.put(WHILE.image(), WHILE);
+        reserved.put(UNTIL.image(), UNTIL);
 
         // Prime the pump.
         nextCh();

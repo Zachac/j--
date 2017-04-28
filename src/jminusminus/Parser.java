@@ -735,6 +735,11 @@ public class Parser {
             mustBe(SEMI);
             
             return new JThrowStatement(line, excpetion);
+        } else if (have (DO)) {
+        	JStatement statement = statement();
+        	mustBe(UNTIL);
+            JExpression test = parExpression();
+            return new JDoUntilStatement(line, statement, test);
         } else if (have(RETURN)) {
             if (have(SEMI)) {
                 return new JReturnStatement(line, null);
