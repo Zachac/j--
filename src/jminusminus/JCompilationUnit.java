@@ -183,6 +183,25 @@ class JCompilationUnit extends JAST {
         for (JAST typeDeclaration : typeDeclarations) {
             typeDeclaration.analyze(this.context);
         }
+        
+        boolean foundPublicClassDecleration = false;
+        
+        //check for multiple public class declarations, if there is one we
+        //report an error
+        for (JAST typeDecleration : typeDeclarations) {
+        	if (typeDecleration instanceof JClassDeclaration) { 
+        		if (((JClassDeclaration) typeDecleration).thisType().isPublic()) {
+	        		if (foundPublicClassDecleration) {
+	        			JAST.compilationUnit.reportSemanticError(
+	        					typeDecleration.line(), 
+	        					"Multiple public class declerations in one file");
+	        		} else {
+	        			foundPublicClassDecleration = true;
+	        		}
+        		}
+        	}
+        }
+        
         return this;
     }
 

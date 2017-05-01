@@ -229,6 +229,16 @@ class Type {
     }
 
     /**
+     * Is this type declared public?
+     * 
+     * @return true or false.
+     */
+
+    public boolean isPublic() {
+        return Modifier.isPublic(classRep.getModifiers());
+    }
+
+    /**
      * Is this a supertype of that?
      * 
      * @param that
