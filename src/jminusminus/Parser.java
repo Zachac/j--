@@ -1223,19 +1223,14 @@ public class Parser {
     
     private JExpression conditionalExpression() {
         int line = scanner.token().line();
-        boolean more = true;
         JExpression lhs = conditionalOrExpression();
         
-        while (more) {
-            if (have(QMARK)) {
-                JExpression output1 = conditionalExpression();
-                mustBe(COLON);
-                JExpression output2 = conditionalExpression();
-                
-                lhs = new JConditionalExpression(line, lhs, output1, output2);
-            } else {
-                more = false;
-            }
+        if (have(QMARK)) {
+            JExpression output1 = conditionalExpression();
+            mustBe(COLON);
+            JExpression output2 = conditionalExpression();
+            
+            lhs = new JConditionalExpression(line, lhs, output1, output2);
         }
         
         return lhs;

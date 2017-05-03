@@ -194,7 +194,7 @@ class JCompilationUnit extends JAST {
 	        		if (foundPublicClassDecleration) {
 	        			JAST.compilationUnit.reportSemanticError(
 	        					typeDecleration.line(), 
-	        					"Multiple public class declerations in one file");
+	        					"Cannot have multiple public class declerations in one file");
 	        		} else {
 	        			foundPublicClassDecleration = true;
 	        		}
