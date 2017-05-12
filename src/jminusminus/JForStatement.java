@@ -1,28 +1,48 @@
 package jminusminus;
 
+import static jminusminus.CLConstants.GOTO;
+
 public class JForStatement extends JStatement {
 
     
-    JExpression conditions;
-    
+    JExpression expression;
     JStatement body;
+    
+    JSimpleForExpression simpleExpression;
     
     public JForStatement(int line, JExpression forExpression, JStatement body) {
         super(line);
-        this.conditions = forExpression;
+        this.expression = forExpression;
         this.body = body;
     }
     
     @Override
     public JAST analyze(Context context) {
-        // TODO Auto-generated method stub
-        return null;
+        if (expression instanceof JSimpleForExpression) {
+            simpleExpression = (JSimpleForExpression) expression.analyze(context);
+            body = (JStatement) body.analyze(context);
+        } else {
+            JAST.compilationUnit.reportSemanticError(
+                    expression.line(), 
+                    "Enhanced for expression not supported!");
+        }
+        
+        return this;
     }
 
     @Override
     public void codegen(CLEmitter output) {
-        // TODO Auto-generated method stub
-
+        simpleExpression.initializer.codegen(output);
+        
+        String test = output.createLabel();
+        String out = output.createLabel();
+        
+        output.addLabel(test);
+        simpleExpression.test.codegen(output, out, false);
+        body.codegen(output);
+        simpleExpression.update.codegen(output);
+        output.addBranchInstruction(GOTO, test);
+        output.addLabel(out);
     }
 
     @Override
@@ -31,7 +51,7 @@ public class JForStatement extends JStatement {
         p.indentRight();
         p.printf("<ForExpression>\n");
         p.indentRight();
-        conditions.writeToStdOut(p);
+        expression.writeToStdOut(p);
         p.indentLeft();
         p.printf("</TestExpression>\n");
         p.printf("<Body>\n");
