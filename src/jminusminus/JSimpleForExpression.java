@@ -3,9 +3,7 @@ package jminusminus;
 public class JSimpleForExpression extends JExpression {
 
     JStatement initializer;
-    
     JExpression test;
-    
     JStatement update;
     
     public JSimpleForExpression(int line, JStatement initializer, JExpression test, JStatement update) {
@@ -17,16 +15,14 @@ public class JSimpleForExpression extends JExpression {
     
     @Override
     public JExpression analyze(Context context) {
-        initializer = (JStatement) initializer.analyze(context);
-        test = (JExpression) test.analyze(context);
-        test.type().mustMatchExpected(line(), Type.BOOLEAN);
-        update = (JStatement) update.analyze(context);
-        return this;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void codegen(CLEmitter output) {
-        
+        // TODO Auto-generated method stub
+
     }
 
     @Override

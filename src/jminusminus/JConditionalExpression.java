@@ -1,5 +1,7 @@
 package jminusminus;
 
+import static jminusminus.CLConstants.GOTO;
+
 public class JConditionalExpression extends JExpression {
 
     private JExpression condition;
@@ -16,14 +18,27 @@ public class JConditionalExpression extends JExpression {
 
     @Override
     public JExpression analyze(Context context) {
-        // TODO Auto-generated method stub
-        return null;
+    	condition = (JExpression) condition.analyze(context);
+        condition.type().mustMatchExpected(line(), Type.BOOLEAN);
+        output1 = (JExpression) output1.analyze(context);
+        output2 = (JExpression) output2.analyze(context);
+        output1.type().mustMatchExpected(line, output2.type);
+        this.type = output1.type;
+
+        return this;
     }
 
     @Override
     public void codegen(CLEmitter output) {
-        // TODO Auto-generated method stub
-
+    	String elseLabel = output.createLabel();
+        String endLabel = output.createLabel();
+        
+        condition.codegen(output, elseLabel, false);
+        output1.codegen(output);
+        output.addBranchInstruction(GOTO, endLabel);
+        output.addLabel(elseLabel);        
+        output2.codegen(output);
+        output.addLabel(endLabel);
     }
 
     @Override
