@@ -717,7 +717,7 @@ public class Parser {
                 mustBe(IDENTIFIER);
                 String name = scanner.previousToken().image();
                 
-                JFormalParameter exception = new JFormalParameter(line, name, type); // TODO 
+                JFormalParameter exception = new JFormalParameter(line, name, type);
                 mustBe(RPAREN);
                 JBlock caught = block();
                 catches.add(new JCatch(catchLine, exception, caught));
@@ -733,7 +733,6 @@ public class Parser {
         } else if (have(THROW)) {
             JExpression excpetion = expression();
             mustBe(SEMI);
-            
             return new JThrowStatement(line, excpetion);
         } else if (have (DO)) {
         	JStatement statement = statement();

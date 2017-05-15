@@ -1,5 +1,7 @@
 package jminusminus;
 
+import static jminusminus.CLConstants.ATHROW;
+
 public class JThrowStatement extends JStatement {
 
     private JExpression exception;
@@ -12,14 +14,22 @@ public class JThrowStatement extends JStatement {
 
     @Override
     public JAST analyze(Context context) {
-        // TODO Auto-generated method stub
-        return null;
+    	
+    	exception = (JExpression) exception.analyze(context);
+    	
+    	if (!exception.type.isJavaAssignableFrom(Type.typeFor(Throwable.class))) {
+    		JAST.compilationUnit.reportSemanticError(line(),
+                    "Can only throw exceptions, got:" + exception.type);
+    	}
+    	
+    	
+        return this;
     }
 
     @Override
     public void codegen(CLEmitter output) {
-        // TODO Auto-generated method stub
-
+    	exception.codegen(output);
+    	output.addNoArgInstruction(ATHROW);
     }
 
     @Override
