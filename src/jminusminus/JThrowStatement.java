@@ -17,9 +17,12 @@ public class JThrowStatement extends JStatement {
     	
     	exception = (JExpression) exception.analyze(context);
     	
-    	if (!exception.type.isJavaAssignableFrom(Type.typeFor(Throwable.class))) {
+    	if (exception.type.classRep() == null) {
     		JAST.compilationUnit.reportSemanticError(line(),
-                    "Can only throw exceptions, got:" + exception.type);
+                    "Cannot find type of given reference.");
+    	} else if (!Type.typeFor(Throwable.class).isJavaAssignableFrom(exception.type)) {
+    		JAST.compilationUnit.reportSemanticError(line(),
+                    "Can only throw exceptions, got: " + exception.type);
     	}
     	
     	
