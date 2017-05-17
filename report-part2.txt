@@ -1,0 +1,15 @@
+PART 2 REPORT FOR TCSS421A SPRING 2017 PROGRAMMING PROJECT
+AUTHOR: ZACHARY CHANDLER, VU HOANG
+
+For part 2, I didn't have much trouble implementing the nodes. To start with, I 
+printed out the grammar file. I manually added each part of the grammar and 
+identified where all the additions needed to be introduced. From there I could
+just look at the marked additions and add it to the code.
+
+The most tedius part was creating all of the new classes and writing the same 
+constructors and methods over and over again. Luckily, eclipse had some utility
+comands that automated some of the process, but it still took a good amount of
+time to complete.
+
+I seemed to have misplaced my test file, but I had a file with all of the
+different statments operations that needed to be added.

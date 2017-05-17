@@ -1,0 +1,11 @@
+PART 3 REPORT FOR TCSS421A SPRING 2017 PROGRAMMING PROJECT
+AUTHOR: ZACHARY CHANDLER, VU HOANG
+
+For this part everything was fairly straightforward. I implemented a for
+loop inside of JCompilationUnit that iterated over all class
+declerations. If I had already found a public class decleration, I would
+report an error.
+
+For the second part I added a single line after the error that added the
+name into the context as Type.ANY.
+
