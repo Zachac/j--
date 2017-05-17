@@ -734,12 +734,30 @@ public class Parser {
             JExpression excpetion = expression();
             mustBe(SEMI);
             return new JThrowStatement(line, excpetion);
-        } else if (have (DO)) {
-        	JStatement statement = statement();
-        	mustBe(UNTIL);
-            JExpression test = parExpression();
-            return new JDoUntilStatement(line, statement, test);
-        } else if (have(RETURN)) {
+//        } else if (have (DO)) {
+//        	JStatement statement = statement();
+//        	mustBe(UNTIL);
+//            JExpression test = parExpression();
+//            return new JDoUntilStatement(line, statement, test);
+//        } 
+        } else if (have(DO)) {
+    			JStatement statement = statement();
+    			TokenKind doEndCondition = scanner.token().kind();
+    			if (!have(WHILE) && !have(UNTIL)) {
+    				reportParserError("Bad do end condition, must be \'until\' or \'while\'");
+    			}
+    			JExpression parExpresion = parExpression();
+    			mustBe(SEMI);
+    			if (doEndCondition == WHILE) {
+    				return new JDoWhileStatement(line, statement, parExpresion);
+    			} else if (doEndCondition == UNTIL) { // UNTIL
+    				return new JDoUntilStatement(line, statement, parExpresion);
+    			} else {
+    				return new JDoUntilStatement(line, statement, parExpresion);
+    			}
+
+    		}
+        else if (have(RETURN)) {
             if (have(SEMI)) {
                 return new JReturnStatement(line, null);
             } else {
