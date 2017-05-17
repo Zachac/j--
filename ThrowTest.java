@@ -4,6 +4,16 @@ import java.lang.System;
 
 public class ThrowTest {
 	
+    public static boolean falseMethod() {
+        System.out.println(false);
+        return false;
+    }
+    
+    public static boolean trueMethod() {
+        System.out.println(true);
+        return true;
+    }
+    
 	public static void main(String[] args) {
         
         System.out.println(false ? false : true);
@@ -20,20 +30,9 @@ public class ThrowTest {
             System.out.println(i);
         }
         
-        if (falseMethod || trueMethod()) {
-            
-        }
+        //if (falseMethod || trueMethod());
         
 		throw new IllegalArgumentException("exception message");
 	}
     
-    public static boolean falseMethod() {
-        System.out.println(false);
-        return false;
-    }
-    
-    public static boolean trueMethod() {
-        System.out.println(true);
-        return true;
-    }
 }

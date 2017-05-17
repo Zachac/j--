@@ -19,7 +19,6 @@ public class JConditionalOrExpression extends JBooleanBinaryExpression {
 		if (onTrue) { 
             lhs.codegen(output, targetLabel, true); 
             rhs.codegen(output, targetLabel, true); 
-            
         } else { 
         	String fallThroughLabel = output.createLabel();
             lhs.codegen(output, fallThroughLabel, true); 
