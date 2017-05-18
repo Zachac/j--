@@ -30,7 +30,9 @@ public class ThrowTest {
             System.out.println(i);
         }
         
-        //if (falseMethod || trueMethod());
+        if (trueMethod() || falseMethod());
+        
+        System.out.println("println: " + (trueMethod() || falseMethod()));
         
 		throw new IllegalArgumentException("exception message");
 	}

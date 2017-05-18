@@ -22,8 +22,25 @@ public class JConditionalExpression extends JExpression {
         condition.type().mustMatchExpected(line(), Type.BOOLEAN);
         output1 = (JExpression) output1.analyze(context);
         output2 = (JExpression) output2.analyze(context);
-        output1.type().mustMatchExpected(line, output2.type);
-        this.type = output1.type;
+        
+        if (output1.type().isJavaAssignableFrom(output2.type())) {
+            this.type = output1.type;
+        } else if (output2.type().isJavaAssignableFrom(output1.type())) {
+            this.type = output2.type;
+        } else {
+            Class<?> superClass = output1.getClass().getSuperclass();
+            Class<?> otherClass = output2.getClass();
+            
+            while (superClass != null && !superClass.isAssignableFrom(otherClass)) {
+                superClass = superClass.getSuperclass();
+            }
+            
+            this.type = Type.typeFor(superClass);
+            
+            if (type == null) {
+                JAST.compilationUnit.reportSemanticError(line, "Cannot convert types.");
+            }
+        }
 
         return this;
     }
