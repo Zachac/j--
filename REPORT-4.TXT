@@ -4,6 +4,9 @@ AUTHOR: ZACHARY CHANDLER, VU HOANG
 
 
 5.6:
+THe do block was self contained in its own analyze methods, and the condition 
+needed a simple check to ensure that it was a boolean expression. For the codegen,
+ create two simple parts, one for the body of the do block and another one for while part.
 
 
 5.7:
@@ -22,6 +25,8 @@ other. So I needed to write a loop for all of the super classes of an object to
 make sure they weren't also a super class of the other expression.
 
 5.12:
+Similar with the JLogicalAndOp. THe analyze methods are almost the same.
+ Codegen had a bit different, modified to make sure the output is correct. 
 
 
 5.21:
